@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f8F8F8',
     },
     text: {
         fontSize: 30

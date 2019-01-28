@@ -47,7 +47,7 @@ export default class DashboardPersoScreen extends React.Component {
                 <View style={styles.stats}>
                     <View style={styles.responseTime}>
                         <SubTitleComponent title={"Temps de réponse par questions"}/>
-                        <VictoryChart width={this.state.width - 230} height={400}
+                        <VictoryChart width={this.state.width - 250} height={400}
                             theme={VictoryTheme.material}>
 
                             <VictoryLabel x={10} y={280} style={styles.label}
@@ -92,20 +92,22 @@ export default class DashboardPersoScreen extends React.Component {
                                 data={this.dataTwo}
                             />
 
-                            <VictoryLegend x={125} y={0}
+                            <VictoryLegend x={10} y={0}
                                            centerTitle
                                            orientation="horizontal"
                                            gutter={20}
-                                           style={{ border: { stroke: "black" }, title: {fontSize: 20 } }}
+                                           style={{ border: { stroke: "#eee" }, title: {fontSize: 20 } }}
                                            data={[
-                                               { name: "Temps personnel", symbol: { fill: "tomato" } },
-                                               { name: "Temps moyen", symbol: { fill: "gold" } }
+                                               { name: "Personnel", symbol: { fill: "tomato" } },
+                                               { name: "Moyenne des autres utilisateurs", symbol: { fill: "gold" } }
                                            ]}
                             />
                         </VictoryChart>
                     </View>
 
-                    <View style={styles.themeDetails}><Text>tutu</Text></View>
+                    <View style={styles.themeDetails}>
+                        <SubTitleComponent title={"Détail par catégories"}/>
+                        <Text>tutu</Text></View>
                 </View>
 
 
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
     responseTime: {
         backgroundColor: '#fff',
         marginRight: 10,
-        padding: 20,
+        padding: 10,
         shadowColor: Colors.BLACK,
         shadowOffset: {
             width: 0,
@@ -137,9 +139,18 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     themeDetails: {
-        width: 200,
-        backgroundColor: '#000',
+        width: 230,
+        backgroundColor: '#fff',
         marginLeft: 10,
+        shadowColor: Colors.BLACK,
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        elevation: 3,
+        padding: 10,
     },
     label: {
         color: "#555"
