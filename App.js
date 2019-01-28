@@ -13,10 +13,7 @@ import { QuestionCollectif } from "./screens/QuestionCollectif";
 import { QuestionCollectifParrallel } from "./screens/QuestionCollectifParrallel";
 import DashboardScreen from "./screens/DashboardScreen";
 
-import { YellowBox } from 'react-native';
-YellowBox.ignoreWarnings([
-    'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
-]);
+console.disableYellowBox = true;
 
 const Routes = createStackNavigator({
     Login: {screen: LoginScreen},
