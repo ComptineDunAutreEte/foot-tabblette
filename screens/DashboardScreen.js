@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     buttonMenuText: {
         color: Colors.WHITE,
         textAlign: 'left',
+        width: '100%'
     },
     buttonMenuSelected: {
         backgroundColor: Colors.DARK_BLUE
@@ -76,10 +77,10 @@ const styles = StyleSheet.create({
     buttonMenuSelectedText: {
         color: Colors.WHITE,
         textAlign: 'left',
+        width: '100%'
     },
     statistiques: {
         flex: 1,
         padding: 15,
     }
 });
-
