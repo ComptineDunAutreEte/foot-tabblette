@@ -1,9 +1,9 @@
 {
-  "devToolsPort": 19002,
+  "devToolsPort": 19003,
   "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 21664,
+  "packagerPort": 19004,
+  "packagerPid": 22309,
   "expoServerNgrokUrl": "https://rf-pv7.anonymous.footboard-tablette.exp.direct",
   "packagerNgrokUrl": "https://packager.rf-pv7.anonymous.footboard-tablette.exp.direct",
-  "ngrokPid": 20996
+  "ngrokPid": 22323
 }
