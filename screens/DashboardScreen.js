@@ -5,6 +5,9 @@ import HeaderComponent from "../components/HeaderComponent";
 import Colors from "../constants/Colors";
 import { Button } from "react-native-elements";
 import {menuFields} from "../constants/dashboard/MenuFields";
+import DashboardPersoScreen from "./dashboard/DashboardPersoScreen";
+import DashboardTeamScreen from "./dashboard/DashboardTeamScreen";
+import DashboardGeneralScreen from "./dashboard/DashboardGeneralScreen";
 
 export default class DashboardScreen extends BaseScreen {
 
@@ -28,8 +31,6 @@ export default class DashboardScreen extends BaseScreen {
                 <View style={styles.menu}>
                     {
                         menuFields.map((menu) => {
-                            console.log(menu);
-
                             return (
                                 <Button key={menu.key} buttonStyle={this.state.selectedStats === menu.key ? styles.buttonMenuSelected : styles.buttonMenu}
                                         onPress={() => {
@@ -41,10 +42,28 @@ export default class DashboardScreen extends BaseScreen {
                         })
                     }
                 </View>
-                <View style={styles.statistiques}><Text>Hello</Text></View>
+                <View style={styles.statistiques}>{ this._handleView() }</View>
 
             </View>
         );
+    }
+
+    _handleView() {
+        let view = null;
+
+        switch(this.state.selectedStats) {
+            case "perso":
+                view = <DashboardPersoScreen/>;
+                break;
+            case "team":
+                view = <DashboardTeamScreen/>;
+                break;
+            case "general":
+                view = <DashboardGeneralScreen/>;
+                break;
+        }
+
+        return view;
     }
 }
 

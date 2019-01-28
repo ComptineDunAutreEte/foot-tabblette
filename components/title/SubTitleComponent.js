@@ -11,9 +11,8 @@ export default class SubTitleComponent extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        color: "#000",
-        fontSize: 25,
+        color: "#4D4F5C",
+        fontSize: 18,
         marginBottom: 15,
-        fontWeight: "bold"
     }
 });

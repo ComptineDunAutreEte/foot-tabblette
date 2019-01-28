@@ -19,11 +19,11 @@ YellowBox.ignoreWarnings([
 ]);
 
 const Routes = createStackNavigator({
+    Dashboard: {screen: DashboardScreen},
     Login: {screen: LoginScreen},
     Home: {screen: HomeScreen},
     QuestionCollectif: {screen: QuestionCollectif},
     QuestionCollectifParrallel: {screen: QuestionCollectifParrallel},
-    Dashboard: {screen: DashboardScreen}
 });
 
 const App = createAppContainer(Routes);
