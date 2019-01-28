@@ -1,28 +1,32 @@
 import React from "react";
 const Orientation = require('react-native-orientation');
-import AppConfiguration from "../config/app.config";
-import io from 'socket.io-client';
-
+import { StatusBar } from 'react-native';
+import UserService from "../services/UserService";
 
 export default class BaseScreen extends React.Component {
 
+    static navigationOptions = {
+        header: null,
+        left: null,
+    };
+
+    state = {
+        spinner: false
+    };
+
     constructor(props) {
         super(props);
-
-        /*this.socket = io(AppConfiguration.serverUrl);
-
-        this.socket.on('data', (data) => {
-            console.log('Data recieved from server', data);
-        });*/
+        this.userService = new UserService();
     }
 
     componentDidMount() {
-        //StatusBar.setHidden(true, "fade");
         Orientation.addOrientationListener(() => Orientation.lockToPortrait());
         Expo.ScreenOrientation.allowAsync(Expo.ScreenOrientation.Orientation.LANDSCAPE_LEFT);
+        StatusBar.setHidden(true);
     }
 
     componentWillUnmount() {
         Expo.ScreenOrientation.allowAsync(Expo.ScreenOrientation.Orientation.LANDSCAPE_LEFT);
+        StatusBar.setHidden(false);
     }
 }

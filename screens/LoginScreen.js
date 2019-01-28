@@ -1,22 +1,22 @@
 import React from "react";
 
-import {Dimensions, Text,Image, KeyboardAvoidingView, StyleSheet, TextInput, View} from 'react-native';
+import { Dimensions, Text, Image, KeyboardAvoidingView, StyleSheet, TextInput, View } from 'react-native';
 import BaseScreen from "./BaseScreen";
-import {Ionicons} from '@expo/vector-icons';
-import {ButtonGroup, Button} from 'react-native-elements';
-import {seconnecte, sedeconnecte, getImage, reset } from "../services/WebsocketService";
-import {Keyboard} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { ButtonGroup, Button } from 'react-native-elements';
+import { seconnecte, sedeconnecte, getImage, reset } from "../services/WebsocketService";
+import { Keyboard } from 'react-native';
 
 export default class LoginScreen extends BaseScreen {
     constructor() {
         super();
         this.state = {
             titleText: "Footboard",
-            logged:"",
+            logged: "",
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
             selectedIndex: 0,
-            img:''
+            img: ''
         };
         this.updateIndex = this.updateIndex.bind(this)
     }
@@ -25,18 +25,20 @@ export default class LoginScreen extends BaseScreen {
         this.setState({selectedIndex})
     }
 
-    connecte(team, pseudo){
+    connecte(team, pseudo) {
         let obj = {
             pseudo: pseudo,
             team: team.split(" ")[1]
         };
         sedeconnecte(obj);
-        seconnecte(message => {this.setState({logged:message})} ,obj);
+        seconnecte(message => {
+            this.setState({logged: message})
+        }, obj);
         Keyboard.dismiss();
     }
 
-    getImage(){
-        getImage((data)=>this.setState({img:data}));
+    getImage() {
+        getImage((data) => this.setState({img: data}));
     }
 
 
@@ -46,29 +48,33 @@ export default class LoginScreen extends BaseScreen {
         const {navigate} = this.props.navigation;
         return (
             <View style={styles.topView}>
-                <KeyboardAvoidingView behavior="padding" style={{flex: 1, width:this.state.width/6}}>
+                <KeyboardAvoidingView behavior="padding" style={{flex: 1, width: this.state.width / 6}}>
 
                     <ButtonGroup
                         onPress={this.updateIndex}
                         selectedIndex={selectedIndex}
                         buttons={buttons}
                         containerStyle={{height: 100}}
-                    ></ButtonGroup>
+                    />
                     <TextInput
-                        style={{height: 80, marginTop:5, borderColor: 'gray', borderWidth: 1, borderRadius:5, fontSize: 40}}
+                        style={{
+                            height: 80,
+                            marginTop: 5,
+                            borderColor: 'gray',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            fontSize: 40
+                        }}
                         onChangeText={(text) => this.setState({text})}
                         value={this.state.text}
                         placeholder={"Pseudo"}
                         onEndEditing={this.clearFocus}
                     />
                     <Button
-                        buttonStyle={{
-                            height: 80,
-                            marginTop:10
-                        }}
+                        buttonStyle={styles.buttonStyle}
                         title='Loggin'
                         icon={
-                            <Ionicons name="md-arrow-forward" size={32} color="white" />
+                            <Ionicons name="md-arrow-forward" size={32} color="white"/>
                         }
                         iconRight
                         onPress={() => {
@@ -78,10 +84,7 @@ export default class LoginScreen extends BaseScreen {
                         }}
                     />
                     <Button
-                        buttonStyle={{
-                            height: 80,
-                            marginTop:10
-                        }}
+                        buttonStyle={styles.buttonStyle}
                         title='Reset Server'
                         iconRight
                         onPress={() => {
@@ -89,19 +92,22 @@ export default class LoginScreen extends BaseScreen {
                         }}
                     />
                     <Button
-                        buttonStyle={{
-                            height: 80,
-                            marginTop:10
-                        }}
+                        buttonStyle={styles.buttonStyle}
                         title='Question collectif (parralèle)'
                         iconRight
                         onPress={() => {
                             navigate('QuestionCollectifParrallel');
                         }}
                     />
+
+                    <Button buttonStyle={styles.buttonStyle} title={"Dashboard"} onPress={() => {
+                        this.props.navigation.navigate("Dashboard")
+                    }}/>
                     <Image style={{width: 50, height: 50}} source={{uri: this.state.img}}/>
 
                 </KeyboardAvoidingView>
+
+
             </View>
         );
     }
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
     baseText: {
         fontFamily: 'Cochin',
         fontSize: 100,
-        flex:1
+        flex: 1
     },
     titleText: {
         fontSize: 20,
@@ -127,6 +133,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'lightblue',
         alignItems: 'center'
+    },
+    buttonStyle: {
+        height: 80,
+        marginTop: 10
     }
 });
 

@@ -3,7 +3,7 @@ import {Animated, PanResponder, StyleSheet, View} from 'react-native';
 import {getSocket} from "../services/WebsocketService";
 
 import Svg, {
-    Circle,
+    Circle as SVGCircle,
     Ellipse,
     G,
     LinearGradient,
@@ -78,7 +78,7 @@ export class QuestionCollectifParrallel extends Component {
         var payments = [];
         for(let i of this.state.pan){
             payments.push(
-                <Circle
+                <SVGCircle
                     {...this.panResponder.panHandlers}
                     x={i.x-45}
                     y={i.y-45}
