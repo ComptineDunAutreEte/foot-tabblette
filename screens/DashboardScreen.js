@@ -71,19 +71,21 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         flex: 1,
-        backgroundColor: '#f8F8F8',
+        backgroundColor: '#f9f9f9',
     },
     text: {
         fontSize: 30
     },
     menu: {
-        width: 200,
+        width: 170,
         backgroundColor: Colors.MEDIUM_BLUE,
     },
     buttonMenu: {
         borderRadius: 0,
         padding: 10,
-        backgroundColor: Colors.MEDIUM_BLUE
+        backgroundColor: Colors.MEDIUM_BLUE,
+        borderLeftWidth: 3,
+        borderColor: Colors.MEDIUM_BLUE,
     },
     buttonMenuText: {
         color: Colors.WHITE,
@@ -91,12 +93,14 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     buttonMenuSelected: {
-        backgroundColor: Colors.DARK_BLUE
+        backgroundColor: Colors.DARK_BLUE,
+        borderLeftWidth: 3,
+        borderColor: Colors.LIGHT_BLUE
     },
     buttonMenuSelectedText: {
         color: Colors.WHITE,
         textAlign: 'left',
-        width: '100%'
+        width: '100%',
     },
     statistiques: {
         flex: 1,

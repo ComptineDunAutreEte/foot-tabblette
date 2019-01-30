@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
     container: {
         color: "#43425D",
         fontSize: 30,
-        marginTop: 15,
         marginBottom: 15,
         fontWeight: "bold"
     }

@@ -1,7 +1,10 @@
 import React from "react";
-import { Dimensions, Text, View, StyleSheet } from 'react-native';
+import { Dimensions, Text, View, StyleSheet, ScrollView } from 'react-native';
 import MainTitle from "../../components/title/MainTitleComponent";
-import { VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryLine, VictoryTheme } from "victory-native";
+import {
+    VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryLine, VictoryPie,
+    VictoryTheme, VictoryAnimation, VictoryPolarAxis, VictoryGroup, VictoryArea
+} from "victory-native";
 import Colors from "../../constants/Colors";
 import SubTitleComponent from "../../components/title/SubTitleComponent";
 
@@ -27,9 +30,16 @@ export default class DashboardPersoScreen extends React.Component {
             {x: 6, y: 1}
         ];
 
+        this.characterData = [
+            {"Culture générale": 10, "Arbitrage": 42, "Stratégie offensive": 27, "Stratégie défensive": 70},
+            {"Culture générale": 62, "Arbitrage": 38, "Stratégie offensive": 93, "Stratégie défensive": 46},
+        ];
+
         this.state = {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
+            data: this.processData(this.characterData),
+            maxima: this.getMaxima(this.characterData)
         };
 
 
@@ -42,21 +52,14 @@ export default class DashboardPersoScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <MainTitle title={"Statistiques personnelles"}/>
+                <ScrollView style={styles.stats}>
 
-                <View style={styles.stats}>
                     <View style={styles.responseTime}>
                         <SubTitleComponent title={"Temps de réponse par questions"}/>
-                        <VictoryChart width={this.state.width - 250} height={400}
-                            theme={VictoryTheme.material}>
+                        <VictoryChart height={250} theme={VictoryTheme.material}>
 
-                            <VictoryLabel x={10} y={280} style={styles.label}
-                                          text={"Temps en secondes"} angle={-90}
-                            />
-
-                            <VictoryLabel x={200} y={390} style={styles.label}
-                                          text={"Numéro de question"}
-                            />
+                            <VictoryLabel x={10} y={230} style={styles.label} text={"Temps en secondes"} angle={-90}/>
+                            <VictoryLabel x={200} y={190} style={styles.label} text={"Numéro de question"}/>
 
                             <VictoryLine
                                 style={{
@@ -71,7 +74,7 @@ export default class DashboardPersoScreen extends React.Component {
                                 domain={{x: [1, this.dataOne.length], y: [0, 15]}}
                                 categories={{x: this.categories}}
                                 labels={(datum) => datum.y}
-                                labelComponent={<VictoryLabel renderInPortal dy={-20}/>}
+                                labelComponent={<VictoryLabel renderInPortal dy={20}/>}
                                 data={this.dataOne}
                             />
 
@@ -88,71 +91,161 @@ export default class DashboardPersoScreen extends React.Component {
                                 domain={{x: [1, this.dataTwo.length], y: [0, 15]}}
                                 categories={{x: this.categories}}
                                 labels={(datum) => datum.y}
-                                labelComponent={<VictoryLabel renderInPortal dy={-20}/>}
+                                labelComponent={<VictoryLabel renderInPortal dy={20}/>}
                                 data={this.dataTwo}
                             />
 
-                            <VictoryLegend x={10} y={0}
-                                           centerTitle
-                                           orientation="horizontal"
-                                           gutter={20}
-                                           style={{ border: { stroke: "#eee" }, title: {fontSize: 20 } }}
-                                           data={[
-                                               { name: "Personnel", symbol: { fill: "tomato" } },
-                                               { name: "Moyenne des autres utilisateurs", symbol: { fill: "gold" } }
-                                           ]}
+                            <VictoryLegend
+                                x={this.state.width / 2 - 50} y={0}
+                                centerTitle
+                                orientation="horizontal"
+                                gutter={20}
+                                style={{border: {stroke: "#eee"}, title: {fontSize: 20}}}
+                                data={[
+                                    {name: "Personnel", symbol: {fill: "tomato"}},
+                                    {name: "Moyenne des autres utilisateurs", symbol: {fill: "gold"}}
+                                ]}
                             />
                         </VictoryChart>
                     </View>
 
-                    <View style={styles.themeDetails}>
-                        <SubTitleComponent title={"Détail par catégories"}/>
-                        <Text>tutu</Text></View>
-                </View>
+                    <View style={styles.container2}>
+                        <View style={styles.leftBottomContainer}>
+
+                            <SubTitleComponent title={"Détail par catégories"}/>
 
 
+
+
+                        </View>
+                        <View style={styles.rightBottom}>
+                            <SubTitleComponent title={"Pourcentage de bonnes réponses"}/>
+                            <VictoryChart polar width={450} height={510} theme={VictoryTheme.material}>
+
+                                <VictoryLegend
+                                    x={10} y={0}
+                                    centerTitle
+                                    orientation="horizontal"
+                                    gutter={20}
+                                    style={{border: {stroke: "#eee"}, title: {fontSize: 20}}}
+                                    data={[
+                                        {name: "Personnel", symbol: {fill: "tomato"}},
+                                        {name: "Moyenne des autres utilisateurs", symbol: {fill: "gold"}}
+                                    ]}
+                                />
+
+                                <VictoryGroup colorScale={["tomato", "gold"]}
+                                              style={{data: {fillOpacity: 0.2, strokeWidth: 2}}}>
+                                    {this.state.data.map((data, i) => {
+                                        return <VictoryArea key={i} data={data}/>;
+                                    })}
+                                </VictoryGroup>
+                                {
+                                    Object.keys(this.state.maxima).map((key, i) => {
+                                        return (
+                                            <VictoryPolarAxis
+                                                key={i} dependentAxis style={axisStyle}
+                                                tickLabelComponent={
+                                                    <VictoryLabel labelPlacement="vertical"/>
+                                                }
+                                                labelPlacement="perpendicular"
+                                                axisValue={i + 1} label={key}
+                                                tickFormat={(t) => Math.ceil(t * this.state.maxima[key])}
+                                                tickValues={[0.25, 0.5, 0.75, 1]}
+                                            />
+                                        );
+                                    })
+                                }
+                                <VictoryPolarAxis
+                                    labelPlacement="parallel"
+                                    tickFormat={() => ""}
+                                    style={{
+                                        axis: {stroke: "none"},
+                                        grid: {stroke: "grey", opacity: 0.5}
+                                    }}
+                                />
+
+                            </VictoryChart>
+                        </View>
+                    </View>
+
+
+                </ScrollView>
             </View>
         )
+    }
+
+    getMaxima(data) {
+        const groupedData = Object.keys(data[0]).reduce((memo, key) => {
+            memo[key] = data.map((d) => d[key]);
+            return memo;
+        }, {});
+        return Object.keys(groupedData).reduce((memo, key) => {
+            memo[key] = 100;
+            return memo;
+        }, {});
+    }
+
+    processData(data) {
+        const maxByGroup = this.getMaxima(data);
+        const makeDataArray = (d) => {
+            return Object.keys(d).map((key) => {
+                return {x: key, y: d[key] / maxByGroup[key]};
+            });
+        };
+        return data.map((datum) => makeDataArray(datum));
     }
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
     },
     stats: {
-        // flex: 1,
+        flex: 1,
+        // flexDirection: 'column',
+    },
+    container2: {
+        flex: 1,
         flexDirection: 'row',
     },
     responseTime: {
         backgroundColor: '#fff',
-        marginRight: 10,
         padding: 10,
-        shadowColor: Colors.BLACK,
-        shadowOffset: {
-            width: 0,
-            height: 0,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-        elevation: 3,
+        borderColor: '#eee',
+        borderWidth: 1,
+        marginBottom: 20,
+        borderRadius: 5,
     },
-    themeDetails: {
-        width: 230,
+    leftBottomContainer: {
+        width: '40%',
         backgroundColor: '#fff',
-        marginLeft: 10,
-        shadowColor: Colors.BLACK,
-        shadowOffset: {
-            width: 0,
-            height: 0,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-        elevation: 3,
+        borderColor: '#eee',
+        borderWidth: 1,
         padding: 10,
+        marginRight: 10,
+        borderRadius: 5,
+    },
+    rightBottom: {
+        width: '60%',
+        backgroundColor: '#fff',
+        borderColor: '#eee',
+        borderWidth: 1,
+        padding: 10,
+        marginLeft: 10,
+        borderRadius: 5,
     },
     label: {
         color: "#555"
-    }
+    },
 });
+
+const axisStyle = {
+    axisLabel: {padding: 30},
+    axis: {stroke: "none"},
+    grid: {
+        stroke: "grey",
+        strokeWidth: 0.25,
+        opacity: 0.5
+    }
+};
