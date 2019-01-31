@@ -226,7 +226,6 @@ const styles = StyleSheet.create({
     },
     stats: {
         flex: 1,
-        // flexDirection: 'column',
     },
     container2: {
         flex: 1,

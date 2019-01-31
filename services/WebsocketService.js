@@ -1,39 +1,39 @@
-import io from 'socket.io-client';
-import { channels } from "../model/channels";
+import {Platform} from 'react-native';
+import openSocket from 'socket.io-client';
+import uid from 'uuid/v4';
+import { User } from "../model/user";
 
-const socket = io("http://eeriel.fr:3000");
+const socket = openSocket('http://eeriel.fr:3000/');
 
-function initParty(cb) {
-    socket.on(channels.init, (game) => cb(game));
-}
+const user = new User();
+user.uuid = uid();
 
-function login(cb, player) {
-    socket.emit(channels.login, player);
-    socket.on(channels.login, (isUserAdd) => cb(isUserAdd))
-}
+const navigation ={};
 
-function confirmReady(cb, user) {
-    socket.emit(channels.ready, user);
-    socket.on(channels.ready, (question) => cb(question));
-}
-
-function sendPlayerResponse(response) {
-    socket.emit(channels.question, response);
-}
-
-export { initParty, login, confirmReady, sendPlayerResponse };
-
-
-/*import openSocket from 'socket.io-client';
-const socket = openSocket('https://server-app-tablet.herokuapp.com/');
+//getSocket().on('navigate',(url)=>navigation.navigate(url));
 
 function seconnecte(cb, toSend) {
     socket.on('login', message => cb(message));
     socket.emit('login', toSend);
 }
 
+function setNavigation(_navigation){
+    //console.log(_navigation);
+    ///const {navigation} = _navigation;
+    //console.log({navigation});
+    ////navigation.navigate = navigation;
+}
+
+function send(chanel, message){
+    socket.emit(chanel, message);
+}
+
 function getSocket(){
     return socket;
+}
+
+function getUser(){
+    return user;
 }
 
 function reset(){
@@ -44,8 +44,12 @@ function getImage(cb) {
     socket.on('img', message => cb(message));
 }
 
+function listen(){
+
+}
+
 
 function sedeconnecte(toSend) {
     socket.emit('disconnect', toSend);
 }
-export { seconnecte , sedeconnecte, getImage, getSocket, reset};*/
+export { getUser , sedeconnecte, getImage, getSocket, reset, send,setNavigation};

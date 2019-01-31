@@ -1,9 +1,7 @@
-class User {
-    constructor() {
-        this.pseudo = null;
-        this.score = 0;
-        this.team = null;
-        this.isReady = false;
+class User{
+    constructor(){
+        this.uuid = "";
+        this.speudo = "";
     }
 }
 
