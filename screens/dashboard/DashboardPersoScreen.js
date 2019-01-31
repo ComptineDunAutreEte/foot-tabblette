@@ -1,12 +1,12 @@
 import React from "react";
-import { Dimensions, Text, View, StyleSheet, ScrollView } from 'react-native';
-import MainTitle from "../../components/title/MainTitleComponent";
+import { Dimensions, Text, View, StyleSheet, ScrollView, FlatList } from 'react-native';
 import {
     VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryLine, VictoryPie,
     VictoryTheme, VictoryAnimation, VictoryPolarAxis, VictoryGroup, VictoryArea
 } from "victory-native";
 import Colors from "../../constants/Colors";
 import SubTitleComponent from "../../components/title/SubTitleComponent";
+import CategoryDetailComponent from "../../components/dashboard/CategoryDetailComponent";
 
 export default class DashboardPersoScreen extends React.Component {
 
@@ -35,6 +35,21 @@ export default class DashboardPersoScreen extends React.Component {
             {"Culture générale": 62, "Arbitrage": 38, "Stratégie offensive": 93, "Stratégie défensive": 46},
         ];
 
+        this.categories = [
+            {
+                key: "Culture générale",
+            },
+            {
+                key: "Arbitrage",
+            },
+            {
+                key: "Stratégie offensive"
+            },
+            {
+                key: "Stratégie défensive"
+            }
+        ];
+
         this.state = {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
@@ -43,9 +58,9 @@ export default class DashboardPersoScreen extends React.Component {
         };
 
 
-        this.categories = [];
+        this.nQuestions = [];
         for (let i = 1; i < this.dataOne.length + 1; i++) {
-            this.categories.push(i.toString());
+            this.nQuestions.push(i.toString());
         }
     }
 
@@ -72,7 +87,7 @@ export default class DashboardPersoScreen extends React.Component {
                                 }}
                                 interpolation="natural"
                                 domain={{x: [1, this.dataOne.length], y: [0, 15]}}
-                                categories={{x: this.categories}}
+                                categories={{x: this.nQuestions}}
                                 labels={(datum) => datum.y}
                                 labelComponent={<VictoryLabel renderInPortal dy={20}/>}
                                 data={this.dataOne}
@@ -89,7 +104,7 @@ export default class DashboardPersoScreen extends React.Component {
                                 }}
                                 interpolation="natural"
                                 domain={{x: [1, this.dataTwo.length], y: [0, 15]}}
-                                categories={{x: this.categories}}
+                                categories={{x: this.nQuestions}}
                                 labels={(datum) => datum.y}
                                 labelComponent={<VictoryLabel renderInPortal dy={20}/>}
                                 data={this.dataTwo}
@@ -114,13 +129,19 @@ export default class DashboardPersoScreen extends React.Component {
 
                             <SubTitleComponent title={"Détail par catégories"}/>
 
-
+                            {
+                                this.categories.map((cat) => {
+                                    return (
+                                        <CategoryDetailComponent key={cat.key} pastilleColor={"#000"} text={cat.key}/>
+                                    )
+                                })
+                            }
 
 
                         </View>
                         <View style={styles.rightBottom}>
                             <SubTitleComponent title={"Pourcentage de bonnes réponses"}/>
-                            <VictoryChart polar width={450} height={510} theme={VictoryTheme.material}>
+                            <VictoryChart polar width={400} height={460} theme={VictoryTheme.material}>
 
                                 <VictoryLegend
                                     x={10} y={0}
@@ -174,6 +195,8 @@ export default class DashboardPersoScreen extends React.Component {
             </View>
         )
     }
+
+    _renderItem = ({ item }) => <Text>{item.email}</Text>
 
     getMaxima(data) {
         const groupedData = Object.keys(data[0]).reduce((memo, key) => {

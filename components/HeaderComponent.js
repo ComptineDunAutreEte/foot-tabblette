@@ -10,7 +10,7 @@ class HeaderComponent extends React.Component {
         if (this.props.pseudo) {
             content = <Text sytle={styles.headerTitle}>Bienvenue { this.props.pseudo } !</Text>;
         } else {
-            content = <Text sytle={styles.headerTitle}>HEADER</Text>
+            content = <Text sytle={styles.headerTitle}>FOOTBOARD</Text>
         }
 
         return (
