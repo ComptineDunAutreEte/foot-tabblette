@@ -6,6 +6,7 @@ import PseudoService from "../services/PseudoService";
 import { Button } from 'react-native-elements';
 import * as Alert from "react-native";
 import DashboardScreen from "../screens/DashboardScreen";
+import GameService from "../services/GameService";
 
 class HeaderComponent extends React.Component {
 
@@ -14,9 +15,11 @@ class HeaderComponent extends React.Component {
         this.width = Dimensions.get('window').width * PixelRatio.get();
         this.height = Dimensions.get('window').height * PixelRatio.get();
         this.pseudoService = new PseudoService();
+        this.gameService = new GameService();
         this.state = {
             pseudo: null,
             modalVisible: false,
+            isInGame: false,
         }
     }
 
@@ -26,6 +29,12 @@ class HeaderComponent extends React.Component {
                 pseudo: pseudo
             })
         });
+
+        this.gameService.isInGame().then((isInGame) => {
+            this.setState({
+                isInGame: isInGame
+            })
+        })
     }
 
     setModalVisible(visible) {
@@ -45,15 +54,17 @@ class HeaderComponent extends React.Component {
                     <Button
                         buttonStyle={styles.buttonMenu}
                         title={"Statistiques"}
+                        titleStyle={styles.buttonTextMenu}
                         onPress={() => {
                             this.setModalVisible(true);
                         }}
+                        disabled={this.state.isInGame}
                     />
 
 
                 </View>
                 <View style={styles.profil}>
-                    <Text>{pseudo}</Text>
+                    <Text>Pseudo : {pseudo} | Niveau : Expert en foot</Text>
                 </View>
 
                 <Modal animationType="slide" transparent={false} visible={this.state.modalVisible}>
@@ -94,18 +105,27 @@ const styles = StyleSheet.create({
     headerTitle: {
         color: Colors.DARK_BLUE,
         fontSize: 25,
-        backgroundColor: "#eee",
+        backgroundColor: "#fff",
         width: Dimensions.get('window').width * PixelRatio.get() / 6,
     },
     menu: {
         width: Dimensions.get('window').width * PixelRatio.get() / 3.5,
-        backgroundColor: "#ddd"
+        backgroundColor: "#fff",
+        alignItems: "center"
     },
     profil: {
         width: Dimensions.get('window').width * PixelRatio.get() / 6,
-        backgroundColor: "#ccc"
+        backgroundColor: "#fff",
+        alignItems: "center"
     },
-    buttonMenu: {}
+    buttonMenu: {
+        backgroundColor: Colors.WHITE,
+        width: 200,
+    },
+    buttonTextMenu: {
+        fontWeight: "bold",
+        color: Colors.DARK_BLUE
+    }
 });
 
 export default HeaderComponent;

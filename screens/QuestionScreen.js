@@ -19,6 +19,8 @@ export default class QuestionScreen extends BaseScreen {
     constructor(props) {
         super(props);
 
+        this.gameService.setIsInGame(true);
+
         this.state = {
             selectedResponse: null,
         };

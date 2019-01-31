@@ -7,6 +7,8 @@ import {
 import Colors from "../../constants/Colors";
 import SubTitleComponent from "../../components/title/SubTitleComponent";
 import CategoryDetailComponent from "../../components/dashboard/CategoryDetailComponent";
+import { categories } from "../../model/categories";
+import MainTitle from "../../components/title/MainTitleComponent";
 
 export default class DashboardPersoScreen extends React.Component {
 
@@ -35,20 +37,7 @@ export default class DashboardPersoScreen extends React.Component {
             {"Culture générale": 62, "Arbitrage": 38, "Stratégie offensive": 93, "Stratégie défensive": 46},
         ];
 
-        this.categories = [
-            {
-                key: "Culture générale",
-            },
-            {
-                key: "Arbitrage",
-            },
-            {
-                key: "Stratégie offensive"
-            },
-            {
-                key: "Stratégie défensive"
-            }
-        ];
+        this.categories = categories;
 
         this.state = {
             width: Dimensions.get('window').width,
@@ -56,6 +45,29 @@ export default class DashboardPersoScreen extends React.Component {
             data: this.processData(this.characterData),
             maxima: this.getMaxima(this.characterData)
         };
+
+        this.statistiquesDetail = [
+            {
+                key: this.categories[0].key,
+                goodResponses: 3,
+                totalQuestions: 5
+            },
+            {
+                key: this.categories[1].key,
+                goodResponses: 1,
+                totalQuestions: 2
+            },
+            {
+                key: this.categories[2].key,
+                goodResponses: 5,
+                totalQuestions: 6
+            },
+            {
+                key: this.categories[3].key,
+                goodResponses: 0,
+                totalQuestions: 2
+            },
+        ];
 
 
         this.nQuestions = [];
@@ -68,6 +80,8 @@ export default class DashboardPersoScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.stats}>
+
+                    <MainTitle title={"Statistiques personnelles du joueur pour le niveau Expert en foot"}/>
 
                     <View style={styles.responseTime}>
                         <SubTitleComponent title={"Temps de réponse par questions"}/>
@@ -130,14 +144,22 @@ export default class DashboardPersoScreen extends React.Component {
                             <SubTitleComponent title={"Détail par catégories"}/>
 
                             {
-                                this.categories.map((cat) => {
-                                    return (
-                                        <CategoryDetailComponent key={cat.key} pastilleColor={"#000"} text={cat.key}/>
-                                    )
+                                this.categories.map((category) => {
+                                    const myStatistique = this.statistiquesDetail.find((s) => s.key === category.key);
+
+                                    if (myStatistique) {
+                                        return (
+                                            <CategoryDetailComponent
+                                                key={category.key}
+                                                pastilleColor={category.color}
+                                                categoryTitle={category.key}
+                                                goodResponses={myStatistique.goodResponses}
+                                                totalQuestions={myStatistique.totalQuestions}
+                                            />
+                                        );
+                                    }
                                 })
                             }
-
-
                         </View>
                         <View style={styles.rightBottom}>
                             <SubTitleComponent title={"Pourcentage de bonnes réponses"}/>
@@ -196,7 +218,7 @@ export default class DashboardPersoScreen extends React.Component {
         )
     }
 
-    _renderItem = ({ item }) => <Text>{item.email}</Text>
+    _renderItem = ({item}) => <Text>{item.email}</Text>
 
     getMaxima(data) {
         const groupedData = Object.keys(data[0]).reduce((memo, key) => {

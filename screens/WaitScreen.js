@@ -14,6 +14,11 @@ export default class WaitScreen extends BaseScreen {
         ),
     };
 
+    constructor(props) {
+        super(props);
+        this.gameService.setIsInGame(false);
+    }
+
 
     render() {
         const {isUserReady} = this.state;
@@ -33,18 +38,89 @@ export default class WaitScreen extends BaseScreen {
                         onPress={() => {
                             this.setState({isUserReady: true});
 
+                            // TODO à virer en implémentant avec le serveur
+                            this.props.navigation.navigate("Question", {
+                                question: {
+                                    category: categories.cultureG,
+                                    type: "",
+                                    difficulty: levels.easy,
+                                    question: "Quelles sont les dimentions des cages ?",
+                                    illustration: null,
+                                    responses: [
+                                        {
+                                            id: 1,
+                                            response: "Largeur : 7,32m Hauteur : 2,44m",
+                                            isValid: true,
+                                            time: null
+                                        },
+                                        {
+                                            id: 2,
+                                            response: "Largeur : 7m Hauteur : 2,5m",
+                                            isValid: true,
+                                            time: null
+                                        },
+                                        {
+                                            id: 3,
+                                            response: "Largeur : 7,51m Hauteur : 2,32m",
+                                            isValid: false,
+                                            time: null
+                                        },
+                                        {
+                                            id: 4,
+                                            response: "Largeur : 7,83m Hauteur : 2,6m",
+                                            isValid: false,
+                                            time: null
+                                        },
+                                    ]
+                                }
+                            });
                         }}
                     />
                 </View>
             );
         } else {
             console.log("user ready");
-            this.userService.getUser().then((user) => {
+            /*this.userService.getUser().then((user) => {
                 user.isReady = true;
                 this.userService.setUser(user);
                 confirmReady((response) => {
                     if (response.isEverybodyReady) {
-                        this.props.navigation.navigate("Question", {question: response.question});
+                        // this.props.navigation.navigate("Question", {question: response.question});
+                        this.props.navigation.navigate("Question", {
+                                question: {
+                                    category: categories.cultureG,
+                                    type: "",
+                                    difficulty: levels.easy,
+                                    question: "Quelles sont les dimentions des cages ?",
+                                    illustration: null,
+                                    responses: [
+                                        {
+                                            id: 1,
+                                            response: "Largeur : 7,32m Hauteur : 2,44m",
+                                            isValid: true,
+                                            time: null
+                                        },
+                                        {
+                                            id: 2,
+                                            response: "Largeur : 7m Hauteur : 2,5m",
+                                            isValid: true,
+                                            time: null
+                                        },
+                                        {
+                                            id: 3,
+                                            response: "Largeur : 7,51m Hauteur : 2,32m",
+                                            isValid: false,
+                                            time: null
+                                        },
+                                        {
+                                            id: 4,
+                                            response: "Largeur : 7,83m Hauteur : 2,6m",
+                                            isValid: false,
+                                            time: null
+                                        },
+                                    ]
+                                }
+                            });
                     }
                 }, user);
             }).catch((error) => {
@@ -57,7 +133,7 @@ export default class WaitScreen extends BaseScreen {
                     <Text style={styles.instructions}>Veuillez attendre que tout le monde soit prêt.</Text>
                     <ActivityIndicator size="large" color="#0000ff"/>
                 </View>
-            );
+            );*/
         }
     }
 }
