@@ -1,23 +1,74 @@
 import React from "react";
-import {StyleSheet, Text, View} from 'react-native';
+import { Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import Colors from "../constants/Colors";
+import { Dimensions, PixelRatio } from 'react-native'
+import PseudoService from "../services/PseudoService";
+import { Button } from 'react-native-elements';
+import * as Alert from "react-native";
+import DashboardScreen from "../screens/DashboardScreen";
 
 class HeaderComponent extends React.Component {
 
-    render() {
-        let content;
-
-        if (this.props.pseudo) {
-            content = <Text sytle={styles.headerTitle}>Bienvenue { this.props.pseudo } !</Text>;
-        } else {
-            content = <Text sytle={styles.headerTitle}>FOOTBOARD</Text>
+    constructor(props) {
+        super(props);
+        this.width = Dimensions.get('window').width * PixelRatio.get();
+        this.height = Dimensions.get('window').height * PixelRatio.get();
+        this.pseudoService = new PseudoService();
+        this.state = {
+            pseudo: null,
+            modalVisible: false,
         }
+    }
+
+    componentDidMount() {
+        this.pseudoService.getPseudo().then((pseudo) => {
+            this.setState({
+                pseudo: pseudo
+            })
+        });
+    }
+
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    }
+
+    render() {
+        const {pseudo} = this.state;
 
         return (
             <View style={styles.header}>
-                <View style={styles.logo}>{content}</View>
-                <View style={styles.menu}>{content}</View>
-                <View style={styles.profil}>{content}</View>
+                <View style={styles.logo}>
+                    <Text style={styles.headerTitle}>FOOTBOARD</Text>
+                </View>
+                <View style={styles.menu}>
+
+                    <Button
+                        buttonStyle={styles.buttonMenu}
+                        title={"Statistiques"}
+                        onPress={() => {
+                            this.setModalVisible(true);
+                        }}
+                    />
+
+
+                </View>
+                <View style={styles.profil}>
+                    <Text>{pseudo}</Text>
+                </View>
+
+                <Modal animationType="slide" transparent={false} visible={this.state.modalVisible}>
+                    <View>
+                        <Button
+                            title={"Fermer les statistiques"}
+                            onPress={() => {
+                                this.setModalVisible(!this.state.modalVisible);
+                            }}
+                        />
+                    </View>
+                    <View style={{marginTop: 22, flex: 1,}}>
+                        <DashboardScreen/>
+                    </View>
+                </Modal>
             </View>
         );
     }
@@ -41,20 +92,20 @@ const styles = StyleSheet.create({
 
     },
     headerTitle: {
-        color: "#ffffff",
+        color: Colors.DARK_BLUE,
         fontSize: 25,
-        backgroundColor: "#000",
-        width: "33%",
+        backgroundColor: "#eee",
+        width: Dimensions.get('window').width * PixelRatio.get() / 6,
     },
     menu: {
-        width: "33%",
-        backgroundColor: "#000"
+        width: Dimensions.get('window').width * PixelRatio.get() / 3.5,
+        backgroundColor: "#ddd"
     },
     profil: {
-        width: "33%",
-        backgroundColor: "#000"
-    }
+        width: Dimensions.get('window').width * PixelRatio.get() / 6,
+        backgroundColor: "#ccc"
+    },
+    buttonMenu: {}
 });
-
 
 export default HeaderComponent;

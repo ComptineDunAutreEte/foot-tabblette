@@ -2,6 +2,7 @@ import React from "react";
 const Orientation = require('react-native-orientation');
 import { StatusBar } from 'react-native';
 import UserService from "../services/UserService";
+import PseudoService from "../services/PseudoService";
 
 export default class BaseScreen extends React.Component {
 
@@ -16,7 +17,8 @@ export default class BaseScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.userService = new UserService();
+        this.pseudoService = new PseudoService();
+        this.pseudo = null
     }
 
     componentDidMount() {

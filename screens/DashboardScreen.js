@@ -11,12 +11,6 @@ import DashboardGeneralScreen from "./dashboard/DashboardGeneralScreen";
 
 export default class DashboardScreen extends BaseScreen {
 
-    static navigationOptions = {
-        header: (
-            <HeaderComponent pseudo={this.pseudo} />
-        ),
-    };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -25,7 +19,6 @@ export default class DashboardScreen extends BaseScreen {
     }
 
     render() {
-        const {navigate} = this.props.navigation;
         return (
             <View style={styles.container}>
                 <View style={styles.menu}>

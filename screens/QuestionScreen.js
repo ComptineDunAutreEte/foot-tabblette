@@ -115,7 +115,7 @@ export default class QuestionScreen extends BaseScreen {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.MEDIUM_GREY,
+        backgroundColor: Colors.DARK_BLUE,
         padding: 15,
         flexDirection: 'row',
         flex: 1,

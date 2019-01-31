@@ -1,19 +1,33 @@
 import React from "react";
-import {StyleSheet, View} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import BaseScreen from "./BaseScreen";
-import {getSocket, reset} from "../services/WebsocketService";
-import {Ionicons} from '@expo/vector-icons';
-import {Button} from 'react-native-elements';
-import {send, setNavigation} from "../services/WebsocketService";
+import { getSocket, reset } from "../services/WebsocketService";
+import { Ionicons } from '@expo/vector-icons';
+import { Button } from 'react-native-elements';
+import { send, setNavigation } from "../services/WebsocketService";
+import { categories } from "../model/categories";
+import { levels } from "../model/levels";
+import HeaderComponent from "../components/HeaderComponent";
+import PseudoService from "../services/PseudoService";
 
 export class HomeScreen extends BaseScreen {
+
+    static navigationOptions = {
+        title: 'Welcome',
+        header: (
+            <HeaderComponent pseudo={this.pseudo} />
+        ),
+    };
+
     constructor(props) {
-        super();
+        super(props);
+
+        this.pseudoService = new PseudoService();
     }
 
     render() {
-        const { navigate } = this.props.navigation;
-        getSocket().on('navigate',(url)=>navigate(url));
+        const {navigate} = this.props.navigation;
+        getSocket().on('navigate', (url) => navigate(url));
         return (
 
             <View style={styles.container}>
@@ -56,7 +70,45 @@ export class HomeScreen extends BaseScreen {
                     }}
                 />
                 <Button buttonStyle={styles.buttonStyle} title={"Dashboard"} onPress={() => {
-                    this.props.navigation.navigate("Dashboard")
+                    navigate("Dashboard")
+                }}/>
+
+                <Button buttonStyle={styles.buttonStyle} title={"Dashboard"} onPress={() => {
+                    navigate("Question", {
+                        question: {
+                            category: categories.cultureG,
+                            type: "",
+                            difficulty: levels.easy,
+                            question: "Quelles sont les dimentions des cages ?",
+                            illustration: null,
+                            responses: [
+                                {
+                                    id: 1,
+                                    response: "Largeur : 7,32m Hauteur : 2,44m",
+                                    isValid: true,
+                                    time: null
+                                },
+                                {
+                                    id: 2,
+                                    response: "Largeur : 7m Hauteur : 2,5m",
+                                    isValid: true,
+                                    time: null
+                                },
+                                {
+                                    id: 3,
+                                    response: "Largeur : 7,51m Hauteur : 2,32m",
+                                    isValid: false,
+                                    time: null
+                                },
+                                {
+                                    id: 4,
+                                    response: "Largeur : 7,83m Hauteur : 2,6m",
+                                    isValid: false,
+                                    time: null
+                                },
+                            ]
+                        }
+                    });
                 }}/>
             </View>
         );
@@ -66,7 +118,7 @@ export class HomeScreen extends BaseScreen {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'powderblue',
+        backgroundColor: "#f8f8f8",
         alignItems: 'center',
         justifyContent: 'center',
     },

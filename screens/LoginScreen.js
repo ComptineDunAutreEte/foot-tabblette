@@ -70,7 +70,7 @@ export default class LoginScreen extends BaseScreen {
                             style={styles.loginInput}
                             onChangeText={(text) => {
                                 this.isEmptyPseudo(false);
-
+                                this.setState({text});
 
                                 if (text === "") {
                                     this.isEmptyPseudo(true);
@@ -86,6 +86,7 @@ export default class LoginScreen extends BaseScreen {
 
                             iconRight
                             onPress={() => {
+                                this.pseudoService.setPseudo(this.state.text);
                                 this.connecte(buttons[this.state.selectedIndex], this.state.text);
                                 //this.getImage();
                                 //navigate('QuestionCollectif');
