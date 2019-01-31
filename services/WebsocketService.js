@@ -1,22 +1,9 @@
 import {Platform} from 'react-native';
 import openSocket from 'socket.io-client';
 import uid from 'uuid/v4';
-//const socket = openSocket('https://server-app-tablet.herokuapp.com/');
-/*var socket;
-if(Platform.OS === 'ios'){
-    socket = openSocket('http://localhost:4000/');
-}else{
-    socket = openSocket('http://10.0.2.2:4000/');
-}*/
+import { User } from "../model/user";
 
-const socket = openSocket('http://localhost:4000/');
-
-class User{
-    constructor(){
-        this.uuid = "";
-        this.speudo = "";
-    }
-}
+const socket = openSocket('http://eeriel.fr:3000/');
 
 const user = new User();
 user.uuid = uid();

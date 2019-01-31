@@ -1,9 +1,18 @@
 {
   "devToolsPort": 19002,
+<<<<<<< HEAD
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
   "expoServerNgrokUrl": null,
   "packagerNgrokUrl": null,
   "ngrokPid": null
+=======
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 12824,
+  "expoServerNgrokUrl": "https://m5-mc9.anonymous.footboard-tablette.exp.direct",
+  "packagerNgrokUrl": "https://packager.m5-mc9.anonymous.footboard-tablette.exp.direct",
+  "ngrokPid": 18744
+>>>>>>> a2dd3b8370a96d112e015cc45cefc631975a881d
 }
