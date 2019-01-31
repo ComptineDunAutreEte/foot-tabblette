@@ -14,6 +14,8 @@ import { QuestionCollectifParrallel } from "./screens/QuestionCollectifParrallel
 import DashboardScreen from "./screens/DashboardScreen";
 
 import { YellowBox } from 'react-native';
+import QuestionScreen from "./screens/QuestionScreen";
+import WaitScreen from "./screens/WaitScreen";
 YellowBox.ignoreWarnings([
     'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
 ]);
@@ -24,6 +26,8 @@ const Routes = createStackNavigator({
     QuestionCollectif: {screen: QuestionCollectif},
     QuestionCollectifParrallel: {screen: QuestionCollectifParrallel},
     Dashboard: {screen: DashboardScreen},
+    Question: {screen: QuestionScreen},
+    Wait: {screen: WaitScreen},
 });
 
 const App = createAppContainer(Routes);

@@ -15,7 +15,9 @@ class HeaderComponent extends React.Component {
 
         return (
             <View style={styles.header}>
-                {content}
+                <View style={styles.logo}>{content}</View>
+                <View style={styles.menu}>{content}</View>
+                <View style={styles.profil}>{content}</View>
             </View>
         );
     }
@@ -34,10 +36,23 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 3,
         elevation: 3,
+        flexDirection: 'row',
+        width: "100%"
+
     },
     headerTitle: {
         color: "#ffffff",
-        fontSize: 25
+        fontSize: 25,
+        backgroundColor: "#000",
+        width: "33%",
+    },
+    menu: {
+        width: "33%",
+        backgroundColor: "#000"
+    },
+    profil: {
+        width: "33%",
+        backgroundColor: "#000"
     }
 });
 
