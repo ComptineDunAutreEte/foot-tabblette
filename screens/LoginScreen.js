@@ -1,24 +1,30 @@
 import React from "react";
 
-import { Dimensions, Text, Image, KeyboardAvoidingView, StyleSheet, TextInput, View } from 'react-native';
+import {KeyboardAvoidingView, StyleSheet, TextInput, View} from 'react-native';
 import BaseScreen from "./BaseScreen";
-import { Ionicons } from '@expo/vector-icons';
-import { ButtonGroup, Button } from 'react-native-elements';
-import { seconnecte, sedeconnecte, getImage, reset } from "../services/WebsocketService";
-import { Keyboard } from 'react-native';
+import {Ionicons} from '@expo/vector-icons';
+import {Button, ButtonGroup} from 'react-native-elements';
+import {getSocket, getUser, seconnecte, send, setNavigation} from "../services/WebsocketService";
+
 
 export default class LoginScreen extends BaseScreen {
     constructor() {
         super();
         this.state = {
             titleText: "Footboard",
-            logged: "",
-            width: Dimensions.get('window').width,
-            height: Dimensions.get('window').height,
             selectedIndex: 0,
-            img: ''
         };
-        this.updateIndex = this.updateIndex.bind(this)
+        this.updateIndex = this.updateIndex.bind(this);
+
+        getSocket().on('login', message => this.handler(message));
+
+    }
+
+    handler(message) {
+
+        if (message.status === 1) {
+            //this.props.navigation.navigate('Home');
+        }
     }
 
     updateIndex(selectedIndex) {
@@ -26,26 +32,20 @@ export default class LoginScreen extends BaseScreen {
     }
 
     connecte(team, pseudo) {
+        getUser().pseudo = pseudo;
         let obj = {
-            pseudo: pseudo,
+            type:'tablet',
+            id: getUser().uuid,
             team: team.split(" ")[1]
         };
-        sedeconnecte(obj);
-        seconnecte(message => {
-            this.setState({logged: message})
-        }, obj);
-        Keyboard.dismiss();
+        send('login', obj);
     }
-
-    getImage() {
-        getImage((data) => this.setState({img: data}));
-    }
-
 
     render() {
         const buttons = ['Team A', 'Team B'];
         const {selectedIndex} = this.state;
-        const {navigate} = this.props.navigation;
+        const { navigate } = this.props.navigation;
+        getSocket().on('navigate',(url)=>navigate(url));
         return (
             <View style={styles.topView}>
                 <KeyboardAvoidingView behavior="padding" style={{flex: 1, width: this.state.width / 6}}>
@@ -80,31 +80,9 @@ export default class LoginScreen extends BaseScreen {
                         onPress={() => {
                             this.connecte(buttons[this.state.selectedIndex], this.state.text);
                             //this.getImage();
-                            navigate('QuestionCollectif');
+                            //navigate('QuestionCollectif');
                         }}
                     />
-                    <Button
-                        buttonStyle={styles.buttonStyle}
-                        title='Reset Server'
-                        iconRight
-                        onPress={() => {
-                            reset();
-                        }}
-                    />
-                    <Button
-                        buttonStyle={styles.buttonStyle}
-                        title='Question collectif (parralèle)'
-                        iconRight
-                        onPress={() => {
-                            navigate('QuestionCollectifParrallel');
-                        }}
-                    />
-
-                    <Button buttonStyle={styles.buttonStyle} title={"Dashboard"} onPress={() => {
-                        this.props.navigation.navigate("Dashboard")
-                    }}/>
-                    <Image style={{width: 50, height: 50}} source={{uri: this.state.img}}/>
-
                 </KeyboardAvoidingView>
 
 

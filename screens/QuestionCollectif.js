@@ -35,10 +35,10 @@ export class QuestionCollectif extends Component {
             }
             //alert(JSON.stringify(question));
         });
-        getSocket().on('question-collectif-waiting', (message) => {
+        /*getSocket().on('question-collectif-waiting', (message) => {
             this.setState({answered: 'wait'});
             //alert(JSON.stringify(question));
-        })
+        })*/
 
     }
 
@@ -88,7 +88,7 @@ export class QuestionCollectif extends Component {
                 <Dialog.Container visible={this.state.dialog_opened}>
                     <Dialog.Title>Vous avez répondu</Dialog.Title>
                     <Dialog.Description>
-                        {this.state.reponse.reponse}
+                        {this.state.reponse.reponse?this.state.reponse.reponse:''}
                     </Dialog.Description>
                     <Dialog.Button label="Soumettre la réponse" onPress={this.handleSoumettre}/>
                     <Dialog.Button label="Annuler" onPress={this.handleCancel} />
