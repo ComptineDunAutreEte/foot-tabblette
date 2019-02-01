@@ -3,8 +3,8 @@ import openSocket from 'socket.io-client';
 import uid from 'uuid/v4';
 import { User } from "../model/user";
 
-//const socket = openSocket('http://eeriel.fr:3000/');
-const socket = openSocket('http://localhost:4000/');
+const socket = openSocket('http://eeriel.fr:3000/');
+//const socket = openSocket('http://localhost:4000/');
 
 const user = new User();
 user.uuid = uid();
@@ -54,13 +54,8 @@ function listen() {
 
 }
 
-function confirmReady(cb) {
-    socket.emit(channels.ready, true);
-    // socket.on(channels.ready, (question) => cb(question));
-}
-
 function getSimpleQuestion(callback) {
-    socket.on("ask-simple-question", question => callback(question));
+    socket.on("ask-simple-question", response => callback(response));
 }
 
 
@@ -68,4 +63,4 @@ function sedeconnecte(toSend) {
     socket.emit('disconnect', toSend);
 }
 
-export { getUser, sedeconnecte, getImage, getSocket, reset, send, setNavigation };
+export { getUser, sedeconnecte, getImage, getSocket, reset, send, setNavigation, getSimpleQuestion };

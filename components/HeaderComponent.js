@@ -2,11 +2,10 @@ import React from "react";
 import { Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
 import Colors from "../constants/Colors";
 import { Dimensions, PixelRatio } from 'react-native'
-import PseudoService from "../services/PseudoService";
 import { Button } from 'react-native-elements';
-import * as Alert from "react-native";
 import DashboardScreen from "../screens/DashboardScreen";
 import GameService from "../services/GameService";
+import SimpleAsyncStorageService from "../services/SimpleAsyncStorageService";
 
 class HeaderComponent extends React.Component {
 
@@ -14,19 +13,27 @@ class HeaderComponent extends React.Component {
         super(props);
         this.width = Dimensions.get('window').width * PixelRatio.get();
         this.height = Dimensions.get('window').height * PixelRatio.get();
-        this.pseudoService = new PseudoService();
+        this.simpleAsyncStorageService = new SimpleAsyncStorageService();
         this.gameService = new GameService();
         this.state = {
             pseudo: null,
             modalVisible: false,
             isInGame: false,
+            playerLevel: null,
         }
     }
 
     componentDidMount() {
-        this.pseudoService.getPseudo().then((pseudo) => {
+        this.simpleAsyncStorageService.get('pseudo').then((pseudo) => {
             this.setState({
                 pseudo: pseudo
+            })
+        });
+
+        this.simpleAsyncStorageService.get('playerLevel').then((level) => {
+            console.log(level);
+            this.setState({
+                playerLevel: level
             })
         });
 
@@ -42,7 +49,7 @@ class HeaderComponent extends React.Component {
     }
 
     render() {
-        const {pseudo} = this.state;
+        const {pseudo, playerLevel} = this.state;
 
         return (
             <View style={styles.header}>
@@ -64,20 +71,25 @@ class HeaderComponent extends React.Component {
 
                 </View>
                 <View style={styles.profil}>
-                    <Text>Pseudo : {pseudo} | Niveau : Expert en foot</Text>
+                    <Text>Pseudo : {pseudo} | Niveau : {playerLevel} en foot</Text>
                 </View>
 
                 <Modal animationType="slide" transparent={false} visible={this.state.modalVisible}>
-                    <View>
-                        <Button
+                    <View style={{flexDirection: 'row'}}>
+                        <View style={{width: Dimensions.get('window').width - 200}}>
+                            <Text>
+                                Niveau : {playerLevel} en foot
+                            </Text>
+                        </View>
+                        <View><Button
                             title={"Fermer les statistiques"}
                             onPress={() => {
                                 this.setModalVisible(!this.state.modalVisible);
                             }}
-                        />
+                        /></View>
                     </View>
                     <View style={{marginTop: 22, flex: 1,}}>
-                        <DashboardScreen/>
+                        <DashboardScreen />
                     </View>
                 </Modal>
             </View>
@@ -119,12 +131,14 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     buttonMenu: {
-        backgroundColor: Colors.WHITE,
+        backgroundColor: Colors.DARK_BLUE,
         width: 200,
+        padding: 5,
+        borderRadius: 5,
     },
     buttonTextMenu: {
         fontWeight: "bold",
-        color: Colors.DARK_BLUE
+        color: Colors.WHITE
     }
 });
 

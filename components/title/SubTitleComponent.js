@@ -13,6 +13,6 @@ const styles = StyleSheet.create({
     container: {
         color: "#4D4F5C",
         fontSize: 18,
-        marginBottom: 15,
+        marginBottom: 10,
     }
 });

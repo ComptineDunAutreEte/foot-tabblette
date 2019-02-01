@@ -81,7 +81,7 @@ export default class DashboardPersoScreen extends React.Component {
             <View style={styles.container}>
                 <ScrollView style={styles.stats}>
 
-                    <MainTitle title={"Statistiques personnelles du joueur pour le niveau Expert en foot"}/>
+                    <MainTitle title={"Vos statistiques personnelles"}/>
 
                     <View style={styles.responseTime}>
                         <SubTitleComponent title={"Temps de réponse par questions"}/>

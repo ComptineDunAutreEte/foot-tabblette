@@ -8,6 +8,8 @@ import { getSocket, getUser, seconnecte, send, setNavigation } from "../services
 import Colors from "../constants/Colors";
 import MainTitle from "../components/title/MainTitleComponent";
 import Text from "react-native-elements/src/text/Text";
+import { userLevelsChoices } from "../model/user-levels";
+import SubTitleComponent from "../components/title/SubTitleComponent";
 
 
 export default class LoginScreen extends BaseScreen {
@@ -16,7 +18,8 @@ export default class LoginScreen extends BaseScreen {
         this.state = {
             titleText: "Footboard",
             selectedIndex: 0,
-            isEmptyPseudo: true
+            isEmptyPseudo: true,
+            userLevel: 1,
         };
         this.updateIndex = this.updateIndex.bind(this);
         this.isEmptyPseudo = this.isEmptyPseudo.bind(this);
@@ -29,7 +32,7 @@ export default class LoginScreen extends BaseScreen {
     handler(message) {
         console.log('ici');
         if (message.status === 1) {
-            this.props.navigation.navigate('Home');
+            this.props.navigation.navigate('Wait');
         }
     }
 
@@ -37,17 +40,11 @@ export default class LoginScreen extends BaseScreen {
         this.setState({selectedIndex})
     }
 
-    connecte(team, pseudo) {
-        getUser().pseudo = pseudo;
-        let obj = {
-            team: team.split(" ")[1]
-        };
-        send('login', obj);
-    }
+
 
     render() {
         const buttons = ['Team A', 'Team B'];
-        const {selectedIndex, isEmptyPseudo} = this.state;
+        const {selectedIndex, isEmptyPseudo, userLevel} = this.state;
         const {navigate} = this.props.navigation;
         getSocket().on('navigate', (url) => navigate(url));
         return (
@@ -58,11 +55,24 @@ export default class LoginScreen extends BaseScreen {
 
                         <MainTitle title={"Bienvenue sur FootBoard !"}/>
                         <Text style={{ marginBottom: 20, textAlign: "center"}}>Veuillez choisir une team et entrer votre pseudo.</Text>
+
+                        <SubTitleComponent title={"Team"} />
                         <ButtonGroup
                             onPress={this.updateIndex}
                             selectedIndex={selectedIndex}
                             buttons={buttons}
-                            containerStyle={{width: 300, height: 60}}
+                            containerStyle={{width: 330, height: 50, marginBottom: 20,}}
+                        />
+
+                        <SubTitleComponent title={"Votre niveau en foot"} />
+                        <ButtonGroup
+                            onPress={(level) => {
+                                console.log(level);
+                                this.setState({userLevel: level})
+                            }}
+                            selectedIndex={userLevel}
+                            buttons={userLevelsChoices}
+                            containerStyle={{width: 330, height: 50}}
                         />
                         <TextInput
                             style={styles.loginInput}
@@ -84,10 +94,15 @@ export default class LoginScreen extends BaseScreen {
 
                             iconRight
                             onPress={() => {
-                                this.pseudoService.setPseudo(this.state.text);
-                                this.connecte(buttons[this.state.selectedIndex], this.state.text);
-                                //this.getImage();
-                                //navigate('QuestionCollectif');
+                                this.simpleAsyncStorageService.set('pseudo', this.state.text);
+                                this.simpleAsyncStorageService.set('team', buttons[this.state.selectedIndex]);
+                                this.simpleAsyncStorageService.set('playerLevel', userLevelsChoices[this.state.userLevel]);
+                                const infos = {
+                                    team: buttons[this.state.selectedIndex],
+                                    pseudo: this.state.text,
+                                    userLevel: userLevelsChoices[this.state.userLevel]
+                                };
+                                this.connecte(infos);
                             }}
                         />
                     </View>
@@ -96,8 +111,22 @@ export default class LoginScreen extends BaseScreen {
         );
     }
 
+    connecte(infos) {
+        getUser().pseudo = infos.pseudo;
+        let obj = {
+            team: infos.team.split(" ")[1],
+            pseudo: infos.pseudo,
+            userLevel: infos.userLevel
+        };
+        send('login', obj);
+    }
+
     isEmptyPseudo(isEmpty) {
         this.setState({isEmpty});
+    }
+
+    updateIndex(selectedIndex) {
+        this.setState({selectedIndex})
     }
 }
 

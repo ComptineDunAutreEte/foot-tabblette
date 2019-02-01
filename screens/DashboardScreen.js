@@ -13,6 +13,7 @@ export default class DashboardScreen extends BaseScreen {
 
     constructor(props) {
         super(props);
+
         this.state = {
             selectedStats: 'perso',
         };

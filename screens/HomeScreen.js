@@ -8,7 +8,6 @@ import { send, setNavigation } from "../services/WebsocketService";
 import { categories } from "../model/categories";
 import { levels } from "../model/levels";
 import HeaderComponent from "../components/HeaderComponent";
-import PseudoService from "../services/PseudoService";
 
 export class HomeScreen extends BaseScreen {
 
@@ -21,8 +20,6 @@ export class HomeScreen extends BaseScreen {
 
     constructor(props) {
         super(props);
-
-        this.pseudoService = new PseudoService();
     }
 
     render() {

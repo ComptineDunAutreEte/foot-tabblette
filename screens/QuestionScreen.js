@@ -19,7 +19,7 @@ export default class QuestionScreen extends BaseScreen {
     constructor(props) {
         super(props);
 
-        this.gameService.setIsInGame(true);
+        // this.gameService.setIsInGame(true);
 
         this.state = {
             selectedResponse: null,
@@ -27,8 +27,7 @@ export default class QuestionScreen extends BaseScreen {
 
         const { navigation } = this.props;
         this.question = navigation.getParam('question');
-        console.log(this.question);
-        this.question.responses = this.shuffle(this.question.responses);
+        console.log("question", this.question);
     }
 
 
@@ -87,32 +86,6 @@ export default class QuestionScreen extends BaseScreen {
         );
 
     }
-
-
-    /**
-     * @TODO A SORTIR DANS UN SERVICE LOL
-     * @param array
-     * @returns {*}
-     */
-    shuffle(array) {
-        let currentIndex = array.length, temporaryValue, randomIndex;
-
-        // While there remain elements to shuffle...
-        while (0 !== currentIndex) {
-
-            // Pick a remaining element...
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-
-            // And swap it with the current element.
-            temporaryValue = array[currentIndex];
-            array[currentIndex] = array[randomIndex];
-            array[randomIndex] = temporaryValue;
-        }
-
-        return array;
-    }
-
 }
 
 const styles = StyleSheet.create({
