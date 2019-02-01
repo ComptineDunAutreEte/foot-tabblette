@@ -118,6 +118,8 @@ export default class LoginScreen extends BaseScreen {
             pseudo: infos.pseudo,
             userLevel: infos.userLevel
         };
+
+        console.log("connect");
         send('login', obj);
     }
 

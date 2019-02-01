@@ -6,6 +6,7 @@ import SubTitleComponent from "../components/title/SubTitleComponent";
 import MainTitle from "../components/title/MainTitleComponent";
 import { Button } from "react-native-elements";
 import Colors from "../constants/Colors";
+import { getSimpleQuestion, getSimpleQuestionResponse, send } from "../services/WebsocketService";
 
 export default class QuestionScreen extends BaseScreen {
 
@@ -65,20 +66,20 @@ export default class QuestionScreen extends BaseScreen {
                                 disabled={this.state.selectedResponse === null}
                                 title={"Valider votre réponse"}
                         onPress={() => {
-                            this.userService.getUser().then((user) => {
-                                console.log(this.state.selectedResponse);
-                                const response = {
-                                    user: user,
-                                    response: {
-                                        questionId: this.question.id,
-                                        responseId: this.state.selectedResponse
-                                    }
-                                };
-                                sendPlayerResponse(response);
-                            }).catch((error) => {
-                                // TODO Implement
-                            });
+                            console.log(this.question.id);
 
+                            console.log(this.state.selectedResponse);
+
+                            const data = {
+                                questionId: this.question.id,
+                                userResponse: this.state.selectedResponse
+                            };
+
+                            send("ask-simple-question", data);
+
+                            getSimpleQuestionResponse((response) => {
+                                console.log("response", response);
+                            })
                         }} />
                     </View>
                 </View>
