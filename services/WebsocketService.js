@@ -3,7 +3,8 @@ import openSocket from 'socket.io-client';
 import uid from 'uuid/v4';
 import { User } from "../model/user";
 
-const socket = openSocket('http://eeriel.fr:3000/');
+//const socket = openSocket('http://eeriel.fr:3000/');
+const socket = openSocket('http://localhost:4000/');
 
 const user = new User();
 user.uuid = uid();
@@ -24,7 +25,12 @@ function setNavigation(_navigation) {
     ////navigation.navigate = navigation;
 }
 
-function send(chanel, message) {
+function send(chanel, _data){
+    let message = {
+        uuid: user.uuid,
+        type: 'tablet',
+        data: _data
+    };
     socket.emit(chanel, message);
 }
 
