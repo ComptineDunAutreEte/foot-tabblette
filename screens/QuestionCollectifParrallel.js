@@ -172,7 +172,7 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
     }*/
 
     getColor(xy){
-        tennisBall = {
+        let tennisBall = {
             position:'absolute',
                 display: 'flex',
                 justifyContent: 'center',
@@ -181,7 +181,7 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
                 borderRadius: 100,
                 width: xy.size,
                 height: xy.size,
-        }
+        };
         return tennisBall;
     }
 
@@ -257,7 +257,7 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
                     />
 
                 </View>
-                <View key={'11'} style={styles.left} {...this._panResponder.panHandlers}>
+                <View key={'15'} style={styles.left} {...this._panResponder.panHandlers}>
                     {this.getCircle()}
                 </View>
             </View>
