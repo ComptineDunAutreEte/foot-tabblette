@@ -32,7 +32,7 @@ export default class LoginScreen extends BaseScreen {
     handler(message) {
         console.log('ici');
         if (message.status === 1) {
-            this.props.navigation.navigate('Wait');
+            this.props.navigation.navigate('Home');
         }
     }
 

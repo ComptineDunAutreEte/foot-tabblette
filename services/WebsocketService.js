@@ -54,6 +54,10 @@ function listen() {
 
 }
 
+function waitingScreen(callback) {
+    socket.on("waitingScreen", response => callback(response));
+}
+
 function getSimpleQuestion(callback) {
     socket.on("ask-simple-question", response => callback(response));
 }
@@ -67,4 +71,4 @@ function sedeconnecte(toSend) {
     socket.emit('disconnect', toSend);
 }
 
-export { getUser, sedeconnecte, getImage, getSocket, reset, send, setNavigation, getSimpleQuestion, getSimpleQuestionResponse };
+export { getUser, sedeconnecte, getImage, getSocket, reset, send, setNavigation, getSimpleQuestion, getSimpleQuestionResponse, waitingScreen };
