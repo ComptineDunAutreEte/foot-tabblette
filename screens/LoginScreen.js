@@ -27,9 +27,9 @@ export default class LoginScreen extends BaseScreen {
     }
 
     handler(message) {
-
+        console.log('ici');
         if (message.status === 1) {
-            //this.props.navigation.navigate('Home');
+            this.props.navigation.navigate('Home');
         }
     }
 
@@ -40,8 +40,6 @@ export default class LoginScreen extends BaseScreen {
     connecte(team, pseudo) {
         getUser().pseudo = pseudo;
         let obj = {
-            type: 'tablet',
-            id: getUser().uuid,
             team: team.split(" ")[1]
         };
         send('login', obj);
