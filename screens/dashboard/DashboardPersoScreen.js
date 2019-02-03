@@ -9,71 +9,103 @@ import SubTitleComponent from "../../components/title/SubTitleComponent";
 import CategoryDetailComponent from "../../components/dashboard/CategoryDetailComponent";
 import { categories } from "../../model/categories";
 import MainTitle from "../../components/title/MainTitleComponent";
+import { UserResponseInformationsService } from "../../services/UserResponseInformationsService";
 
 export default class DashboardPersoScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.dataOne = [
-            {x: 1, y: 2},
-            {x: 2, y: 4},
-            {x: 3, y: 3.5},
-            {x: 4, y: 6},
-            {x: 5, y: 1},
-            {x: 6, y: 13.2}
-        ];
 
-        this.dataTwo = [
-            {x: 1, y: 5},
-            {x: 2, y: 2},
-            {x: 3, y: 6},
-            {x: 4, y: 3.4},
-            {x: 5, y: 2},
-            {x: 6, y: 1}
-        ];
 
-        this.characterData = [
-            {"Culture générale": 10, "Arbitrage": 42, "Stratégie offensive": 27, "Stratégie défensive": 70},
-            {"Culture générale": 62, "Arbitrage": 38, "Stratégie offensive": 93, "Stratégie défensive": 46},
-        ];
+        userResponsesService = new UserResponseInformationsService();
+        const userResponses = userResponsesService.createResponses();
+        const generalResponses = userResponsesService.createResponses(userResponses.length);
 
+        this.userDatas = this.retrieveResponses(userResponses);
+        this.generalDatas = this.retrieveResponses(generalResponses);
+
+
+        this.goodResponsesByCategories = [[], []];
+
+        categories.forEach((category) => {
+            this.goodResponsesByCategories[0].push({
+                category: category.key,
+                goodResponses: 0,
+                totalQuestions: 0
+            });
+            this.goodResponsesByCategories[1].push({
+                category: category.key,
+                goodResponses: 0,
+                totalQuestions: 0
+            })
+        });
+
+        userResponses.forEach((userResponse) => {
+            const cat = this.goodResponsesByCategories[0].find((c) => c.category === userResponse.category);
+            cat.totalQuestions++;
+            if (userResponse.isGoodResponse) {
+                cat.goodResponses++;
+            }
+        });
+
+        generalResponses.forEach((generalResponse) => {
+            const cat = this.goodResponsesByCategories[1].find((c) => c.category === generalResponse.category);
+            cat.totalQuestions++;
+            if (generalResponse.isGoodResponse) {
+                cat.goodResponses++;
+            }
+        });
+
+        this.characterDatas = [{}, {}];
+        this.goodResponsesByCategories[0].forEach((data) => {
+            if (data.totalQuestions > 0) {
+                this.characterDatas[0][data.category] = parseInt((data.goodResponses * 100) / data.totalQuestions);
+            } else {
+                this.characterDatas[0][data.category] = 0;
+            }
+        });
+
+        this.goodResponsesByCategories[1].forEach((data) => {
+            if (data.totalQuestions > 0) {
+                this.characterDatas[1][data.category] = parseInt((data.goodResponses * 100) / data.totalQuestions);
+            } else {
+                this.characterDatas[1][data.category] = 0;
+            }
+        });
+
+        generalResponses.forEach((generalResponse) => {
+            const cat = this.goodResponsesByCategories[1].find((c) => c.category === generalResponse.category);
+            cat.totalQuestions++;
+            if (generalResponse.isGoodResponse) {
+                cat.goodResponses++;
+            }
+        });
         this.categories = categories;
 
         this.state = {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
-            data: this.processData(this.characterData),
-            maxima: this.getMaxima(this.characterData)
+            data: this.processData(this.characterDatas),
+            maxima: this.getMaxima(this.characterDatas)
         };
 
-        this.statistiquesDetail = [
-            {
-                key: this.categories[0].key,
-                goodResponses: 3,
-                totalQuestions: 5
-            },
-            {
-                key: this.categories[1].key,
-                goodResponses: 1,
-                totalQuestions: 2
-            },
-            {
-                key: this.categories[2].key,
-                goodResponses: 5,
-                totalQuestions: 6
-            },
-            {
-                key: this.categories[3].key,
-                goodResponses: 0,
-                totalQuestions: 2
-            },
-        ];
-
-
         this.nQuestions = [];
-        for (let i = 1; i < this.dataOne.length + 1; i++) {
+        for (let i = 1; i < this.userDatas.length + 1; i++) {
             this.nQuestions.push(i.toString());
         }
+    }
+
+    retrieveResponses(responses) {
+        let datas = [];
+
+        responses.forEach((response, i) => {
+            datas.push({
+                x: i + 1,
+                y: response.responseTime
+            });
+        });
+
+        return datas;
     }
 
     render() {
@@ -85,26 +117,22 @@ export default class DashboardPersoScreen extends React.Component {
 
                     <View style={styles.responseTime}>
                         <SubTitleComponent title={"Temps de réponse par questions"}/>
-                        <VictoryChart height={250} theme={VictoryTheme.material}>
+                        <VictoryChart height={350} theme={VictoryTheme.material}>
 
                             <VictoryLabel x={10} y={230} style={styles.label} text={"Temps en secondes"} angle={-90}/>
-                            <VictoryLabel x={200} y={190} style={styles.label} text={"Numéro de question"}/>
+                            <VictoryLabel x={300} y={340} style={styles.label} text={"Numéro de question"}/>
 
                             <VictoryLine
                                 style={{
                                     data: {stroke: "tomato", strokeWidth: 2},
                                     parent: {border: "1px solid #ccc"}
                                 }}
-                                animate={{
-                                    duration: 2000,
-                                    onLoad: {duration: 1000}
-                                }}
                                 interpolation="natural"
-                                domain={{x: [1, this.dataOne.length], y: [0, 15]}}
+                                domain={{x: [1, this.userDatas.length], y: [0, 16]}}
                                 categories={{x: this.nQuestions}}
                                 labels={(datum) => datum.y}
                                 labelComponent={<VictoryLabel renderInPortal dy={20}/>}
-                                data={this.dataOne}
+                                data={this.userDatas}
                             />
 
                             <VictoryLine
@@ -112,16 +140,10 @@ export default class DashboardPersoScreen extends React.Component {
                                     data: {stroke: "gold", strokeWidth: 2},
                                     parent: {border: "1px solid #ccc"}
                                 }}
-                                animate={{
-                                    duration: 2000,
-                                    onLoad: {duration: 1000}
-                                }}
                                 interpolation="natural"
-                                domain={{x: [1, this.dataTwo.length], y: [0, 15]}}
+                                domain={{x: [1, this.generalDatas.length], y: [0, 16]}}
                                 categories={{x: this.nQuestions}}
-                                labels={(datum) => datum.y}
-                                labelComponent={<VictoryLabel renderInPortal dy={20}/>}
-                                data={this.dataTwo}
+                                data={this.generalDatas}
                             />
 
                             <VictoryLegend
@@ -145,7 +167,7 @@ export default class DashboardPersoScreen extends React.Component {
 
                             {
                                 this.categories.map((category) => {
-                                    const myStatistique = this.statistiquesDetail.find((s) => s.key === category.key);
+                                    const myStatistique = this.goodResponsesByCategories[0].find((s) => s.category === category.key);
 
                                     if (myStatistique) {
                                         return (
@@ -183,6 +205,7 @@ export default class DashboardPersoScreen extends React.Component {
                                         return <VictoryArea key={i} data={data}/>;
                                     })}
                                 </VictoryGroup>
+
                                 {
                                     Object.keys(this.state.maxima).map((key, i) => {
                                         return (
@@ -199,20 +222,9 @@ export default class DashboardPersoScreen extends React.Component {
                                         );
                                     })
                                 }
-                                <VictoryPolarAxis
-                                    labelPlacement="parallel"
-                                    tickFormat={() => ""}
-                                    style={{
-                                        axis: {stroke: "none"},
-                                        grid: {stroke: "grey", opacity: 0.5}
-                                    }}
-                                />
-
                             </VictoryChart>
                         </View>
                     </View>
-
-
                 </ScrollView>
             </View>
         )

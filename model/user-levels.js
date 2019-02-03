@@ -1,5 +1,5 @@
 export const userLevelsChoices = [
     novice = "Novice",
-    medium = "Moyen",
+    medium = "Intermédiaire",
     expert = "Expert",
 ];

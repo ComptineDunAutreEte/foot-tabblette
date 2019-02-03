@@ -44,6 +44,10 @@ class HeaderComponent extends React.Component {
         })
     }
 
+    componentWillUnmount() {
+        this.setModalVisible(false);
+    }
+
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
     }
@@ -81,12 +85,14 @@ class HeaderComponent extends React.Component {
                                 Niveau : {playerLevel} en foot
                             </Text>
                         </View>
-                        <View><Button
-                            title={"Fermer les statistiques"}
-                            onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible);
-                            }}
-                        /></View>
+                        <View>
+                            <Button
+                                title={"Fermer les statistiques"}
+                                onPress={() => {
+                                    this.setModalVisible(false);
+                                }}
+                            />
+                        </View>
                     </View>
                     <View style={{marginTop: 22, flex: 1,}}>
                         <DashboardScreen />

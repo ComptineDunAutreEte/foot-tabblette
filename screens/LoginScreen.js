@@ -67,7 +67,6 @@ export default class LoginScreen extends BaseScreen {
                         <SubTitleComponent title={"Votre niveau en foot"} />
                         <ButtonGroup
                             onPress={(level) => {
-                                console.log(level);
                                 this.setState({userLevel: level})
                             }}
                             selectedIndex={userLevel}
@@ -119,7 +118,6 @@ export default class LoginScreen extends BaseScreen {
             userLevel: infos.userLevel
         };
 
-        console.log("connect");
         send('login', obj);
     }
 
