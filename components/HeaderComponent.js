@@ -71,11 +71,10 @@ class HeaderComponent extends React.Component {
                         }}
                         disabled={this.state.isInGame}
                     />
-
-
                 </View>
                 <View style={styles.profil}>
-                    <Text>Pseudo : {pseudo} | Niveau : {playerLevel} en foot</Text>
+                    <Text>Pseudo : {pseudo}</Text>
+                    <Text>Niveau : {playerLevel} en foot</Text>
                 </View>
 
                 <Modal animationType="slide" transparent={false} visible={this.state.modalVisible}>

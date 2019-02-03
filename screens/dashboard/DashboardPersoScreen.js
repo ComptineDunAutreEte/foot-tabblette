@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, Text, View, StyleSheet, ScrollView, FlatList } from 'react-native';
+import { Dimensions, Text, View, StyleSheet, ScrollView, FlatList, PixelRatio } from 'react-native';
 import {
     VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryLine, VictoryPie,
     VictoryTheme, VictoryAnimation, VictoryPolarAxis, VictoryGroup, VictoryArea
@@ -10,12 +10,12 @@ import CategoryDetailComponent from "../../components/dashboard/CategoryDetailCo
 import { categories } from "../../model/categories";
 import MainTitle from "../../components/title/MainTitleComponent";
 import { UserResponseInformationsService } from "../../services/UserResponseInformationsService";
+import { responseLevels } from "../../model/response-levels";
 
 export default class DashboardPersoScreen extends React.Component {
 
     constructor(props) {
         super(props);
-
 
         userResponsesService = new UserResponseInformationsService();
         const userResponses = userResponsesService.createResponses();
@@ -40,13 +40,31 @@ export default class DashboardPersoScreen extends React.Component {
             })
         });
 
+        this.averageResponsesTime = 0;
+        this.totalQuestions = 0;
+        this.goodResponses = 0;
+
         userResponses.forEach((userResponse) => {
             const cat = this.goodResponsesByCategories[0].find((c) => c.category === userResponse.category);
             cat.totalQuestions++;
             if (userResponse.isGoodResponse) {
                 cat.goodResponses++;
+                this.goodResponses++;
             }
+
+            this.averageResponsesTime += userResponse.responseTime;
+            this.totalQuestions++;
         });
+
+        if (this.totalQuestions > 0) {
+            this.averageResponsesTime /= this.totalQuestions;
+        }
+
+        this.averageResponsesTime = Math.round(this.averageResponsesTime * 10) / 10;
+        this.goodResponsesPercentage = this.goodResponses * 100 / this.totalQuestions;
+        this.responsesLevels = this.getUserLevel(this.goodResponsesPercentage);
+        this.userLevel = this.responsesLevels.level;
+        this.userColorLevel = this.responsesLevels.color;
 
         generalResponses.forEach((generalResponse) => {
             const cat = this.goodResponsesByCategories[1].find((c) => c.category === generalResponse.category);
@@ -80,6 +98,7 @@ export default class DashboardPersoScreen extends React.Component {
                 cat.goodResponses++;
             }
         });
+
         this.categories = categories;
 
         this.state = {
@@ -108,6 +127,12 @@ export default class DashboardPersoScreen extends React.Component {
         return datas;
     }
 
+    getUserLevel(goodResponsesPercentage) {
+        return responseLevels.find((l) => {
+            return l.min <= goodResponsesPercentage && l.max >= goodResponsesPercentage;
+        });
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -115,12 +140,36 @@ export default class DashboardPersoScreen extends React.Component {
 
                     <MainTitle title={"Vos statistiques personnelles"}/>
 
+                    <View style={styles.infosTop}>
+                        <View style={styles.bloc1}>
+                            <Text style={styles.statTextBloc}>{this.averageResponsesTime} s</Text>
+                            <Text style={{textAlign: "center"}}>Temps moyen</Text>
+                        </View>
+
+                        <View style={styles.bloc2}>
+                            <Text style={styles.statTextBloc}>{this.goodResponses} / {this.totalQuestions}</Text>
+                            <Text style={{textAlign: "center"}}>Bonnes réponses</Text>
+                        </View>
+
+                        <View style={{
+                            flexGrow: 1,
+                            backgroundColor: this.userColorLevel,
+                            borderColor: '#eee',
+                            borderWidth: 1,
+                            padding: 15,
+                            borderRadius: 5,
+                        }}>
+                            <Text style={{fontSize: 30, textAlign: "center", marginBottom: 10, fontWeight: "bold", color: "#fff"}}>{this.userLevel}</Text>
+                            <Text style={{textAlign: "center", color: "#fff"}}>Votre niveau</Text>
+                        </View>
+                    </View>
+
                     <View style={styles.responseTime}>
                         <SubTitleComponent title={"Temps de réponse par questions"}/>
-                        <VictoryChart height={350} theme={VictoryTheme.material}>
+                        <VictoryChart height={300} theme={VictoryTheme.material}>
 
                             <VictoryLabel x={10} y={230} style={styles.label} text={"Temps en secondes"} angle={-90}/>
-                            <VictoryLabel x={300} y={340} style={styles.label} text={"Numéro de question"}/>
+                            <VictoryLabel x={300} y={320} style={styles.label} text={"Numéro de question"}/>
 
                             <VictoryLine
                                 style={{
@@ -264,6 +313,37 @@ const styles = StyleSheet.create({
     container2: {
         flex: 1,
         flexDirection: 'row',
+    },
+    infosTop: {
+        flex: 1,
+        flexDirection: 'row',
+        marginBottom: 15,
+    },
+    bloc1: {
+        flexGrow: 1,
+        backgroundColor: '#fff',
+        borderColor: '#eee',
+        borderWidth: 1,
+        padding: 15,
+        borderRadius: 5
+    },
+    bloc2: {
+        flexGrow: 1,
+        backgroundColor: '#fff',
+        borderColor: '#eee',
+        borderWidth: 1,
+        marginLeft: 20,
+        marginRight: 20,
+        padding: 15,
+        borderRadius: 5
+    },
+    bloc3: {
+
+    },
+    statTextBloc: {
+        fontSize: 30,
+        textAlign: "center",
+        marginBottom: 10,
     },
     responseTime: {
         backgroundColor: '#fff',
