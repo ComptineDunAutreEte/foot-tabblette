@@ -1,38 +1,32 @@
 import React from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import BaseScreen from "./BaseScreen";
-import HeaderComponent from "../components/HeaderComponent";
 import Colors from "../constants/Colors";
 import { Button } from "react-native-elements";
-import {menuFields} from "../constants/dashboard/MenuFields";
+import { menuFields } from "../constants/dashboard/MenuFields";
 import DashboardPersoScreen from "./dashboard/DashboardPersoScreen";
 import DashboardTeamScreen from "./dashboard/DashboardTeamScreen";
 import DashboardGeneralScreen from "./dashboard/DashboardGeneralScreen";
 
 export default class DashboardScreen extends BaseScreen {
 
-    static navigationOptions = {
-        header: (
-            <HeaderComponent pseudo={this.pseudo} />
-        ),
-    };
-
     constructor(props) {
         super(props);
+
         this.state = {
             selectedStats: 'perso',
         };
     }
 
     render() {
-        const {navigate} = this.props.navigation;
         return (
             <View style={styles.container}>
                 <View style={styles.menu}>
                     {
                         menuFields.map((menu) => {
                             return (
-                                <Button key={menu.key} buttonStyle={this.state.selectedStats === menu.key ? styles.buttonMenuSelected : styles.buttonMenu}
+                                <Button key={menu.key}
+                                        buttonStyle={this.state.selectedStats === menu.key ? styles.buttonMenuSelected : styles.buttonMenu}
                                         onPress={() => {
                                             this.setState({selectedStats: menu.key})
                                         }}
@@ -42,8 +36,8 @@ export default class DashboardScreen extends BaseScreen {
                         })
                     }
                 </View>
-                <View style={styles.statistiques}>{ this._handleView() }</View>
 
+                <View style={styles.statistiques}>{this._handleView()}</View>
             </View>
         );
     }
@@ -51,7 +45,7 @@ export default class DashboardScreen extends BaseScreen {
     _handleView() {
         let view = null;
 
-        switch(this.state.selectedStats) {
+        switch (this.state.selectedStats) {
             case "perso":
                 view = <DashboardPersoScreen/>;
                 break;

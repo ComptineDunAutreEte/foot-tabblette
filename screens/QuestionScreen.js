@@ -6,6 +6,7 @@ import SubTitleComponent from "../components/title/SubTitleComponent";
 import MainTitle from "../components/title/MainTitleComponent";
 import { Button } from "react-native-elements";
 import Colors from "../constants/Colors";
+import { getSimpleQuestion, getSimpleQuestionResponse, send } from "../services/WebsocketService";
 
 export default class QuestionScreen extends BaseScreen {
 
@@ -19,14 +20,15 @@ export default class QuestionScreen extends BaseScreen {
     constructor(props) {
         super(props);
 
+        // this.gameService.setIsInGame(true);
+
         this.state = {
             selectedResponse: null,
         };
 
         const { navigation } = this.props;
         this.question = navigation.getParam('question');
-        console.log(this.question);
-        this.question.responses = this.shuffle(this.question.responses);
+        console.log("question", this.question);
     }
 
 
@@ -64,20 +66,20 @@ export default class QuestionScreen extends BaseScreen {
                                 disabled={this.state.selectedResponse === null}
                                 title={"Valider votre réponse"}
                         onPress={() => {
-                            this.userService.getUser().then((user) => {
-                                console.log(this.state.selectedResponse);
-                                const response = {
-                                    user: user,
-                                    response: {
-                                        questionId: this.question.id,
-                                        responseId: this.state.selectedResponse
-                                    }
-                                };
-                                sendPlayerResponse(response);
-                            }).catch((error) => {
-                                // TODO Implement
-                            });
+                            console.log(this.question.id);
 
+                            console.log(this.state.selectedResponse);
+
+                            const data = {
+                                questionId: this.question.id,
+                                userResponse: this.state.selectedResponse
+                            };
+
+                            send("ask-simple-question", data);
+
+                            getSimpleQuestionResponse((response) => {
+                                console.log("response", response);
+                            })
                         }} />
                     </View>
                 </View>
@@ -85,37 +87,11 @@ export default class QuestionScreen extends BaseScreen {
         );
 
     }
-
-
-    /**
-     * @TODO A SORTIR DANS UN SERVICE LOL
-     * @param array
-     * @returns {*}
-     */
-    shuffle(array) {
-        let currentIndex = array.length, temporaryValue, randomIndex;
-
-        // While there remain elements to shuffle...
-        while (0 !== currentIndex) {
-
-            // Pick a remaining element...
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-
-            // And swap it with the current element.
-            temporaryValue = array[currentIndex];
-            array[currentIndex] = array[randomIndex];
-            array[randomIndex] = temporaryValue;
-        }
-
-        return array;
-    }
-
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.MEDIUM_GREY,
+        backgroundColor: Colors.DARK_BLUE,
         padding: 15,
         flexDirection: 'row',
         flex: 1,

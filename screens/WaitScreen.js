@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View, ActivityIndicator } from 'react-nativ
 import HeaderComponent from "../components/HeaderComponent";
 import { Button } from 'react-native-elements';
 import BaseScreen from "./BaseScreen";
-import { confirmReady, retrieveQuestion } from "../services/WebsocketService";
+import { confirmReady, getSimpleQuestion, retrieveQuestion, send } from "../services/WebsocketService";
 
 export default class WaitScreen extends BaseScreen {
 
@@ -13,6 +13,11 @@ export default class WaitScreen extends BaseScreen {
             <HeaderComponent pseudo={this.pseudo}/>
         ),
     };
+
+    constructor(props) {
+        super(props);
+        // this.gameService.setIsInGame(false);
+    }
 
 
     render() {
@@ -33,24 +38,19 @@ export default class WaitScreen extends BaseScreen {
                         onPress={() => {
                             this.setState({isUserReady: true});
 
+                            send("ready", {
+                                isReady: true,
+                            });
                         }}
                     />
                 </View>
             );
         } else {
-            console.log("user ready");
-            this.userService.getUser().then((user) => {
-                user.isReady = true;
-                this.userService.setUser(user);
-                confirmReady((response) => {
-                    if (response.isEverybodyReady) {
-                        this.props.navigation.navigate("Question", {question: response.question});
-                    }
-                }, user);
-            }).catch((error) => {
-                // TODO Implement
+            getSimpleQuestion((response) => {
+                if (response.isEverybodyReady) {
+                    this.props.navigation.navigate("Question", {question: response.question})
+                }
             });
-
 
             return (
                 <View style={styles.container}>
