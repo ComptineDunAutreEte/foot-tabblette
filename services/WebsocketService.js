@@ -45,12 +45,8 @@ function getUser() {
     return user;
 }
 
-<<<<<<< HEAD
 function reset(){
     console.log('reset');
-=======
-function reset() {
->>>>>>> df2f0b5376a2ca0f61c1f22672d9df260a32c0f9
     socket.emit('reset', 'reset');
 }
 
