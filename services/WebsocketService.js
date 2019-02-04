@@ -6,6 +6,9 @@ import { User } from "../model/user";
 //const socket = openSocket('http://eeriel.fr:3000/');
 const socket = openSocket('http://localhost:4000/');
 
+//const socket = openSocket('https://server-app-tablet.herokuapp.com/');
+
+
 const user = new User();
 user.uuid = uid();
 
@@ -43,6 +46,7 @@ function getUser(){
 }
 
 function reset(){
+    console.log('reset');
     socket.emit('reset', 'reset');
 }
 

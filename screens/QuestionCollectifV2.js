@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Animated, StyleSheet,TouchableOpacity, Text, View} from 'react-native';
-import {getSocket} from "../services/WebsocketService";
+import {getSocket, send} from "../services/WebsocketService";
 
 
 export class QuestionCollectifV2 extends Component {
@@ -13,12 +13,15 @@ export class QuestionCollectifV2 extends Component {
             answered: 'play',
             reponse:''
         };
+
+        send('ready-question-collectif-v2','');
         getSocket().on('ask-question-collectif-request-v2', (message) => {
             //console.log(message);
             for (let p of message) {
                 p.pan = new Animated.ValueXY({x: p.x, y: p.y});
             }
             this.setState({situation: message});
+            send('answers-question-collectif-request-v2', '');
         });
 
         getSocket().on('answers-question-collectif-request-v2', (message) => {
@@ -26,7 +29,7 @@ export class QuestionCollectifV2 extends Component {
             this.setState({question: message.question});
             this.setState({reponses:message.reponses});
         });
-        getSocket().emit('ask-question-collectif-request-v2', '');
+        //getSocket().emit('ask-question-collectif-request-v2', '');
 
     }
 
@@ -93,10 +96,6 @@ export class QuestionCollectifV2 extends Component {
         return views;
     }
 
-    getView(){
-
-    }
-
     _answer(answer){
         for(let s of this.state.situation){
             for(let moveTo of answer.moveTo)
@@ -151,7 +150,6 @@ export class QuestionCollectifV2 extends Component {
                 </View>
                 <View style={styles.left}>
                     {this.getCircles()}
-                    {this.getCirclesZone()}
                 </View>
             </View>
         );

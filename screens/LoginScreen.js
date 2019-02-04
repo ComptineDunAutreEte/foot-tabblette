@@ -4,7 +4,7 @@ import { KeyboardAvoidingView, StyleSheet, TextInput, View } from 'react-native'
 import BaseScreen from "./BaseScreen";
 import { Ionicons } from '@expo/vector-icons';
 import { Button, ButtonGroup } from 'react-native-elements';
-import { getSocket, getUser, seconnecte, send, setNavigation } from "../services/WebsocketService";
+import { getSocket, getUser, seconnecte, send, reset } from "../services/WebsocketService";
 import Colors from "../constants/Colors";
 import MainTitle from "../components/title/MainTitleComponent";
 import Text from "react-native-elements/src/text/Text";
@@ -22,7 +22,7 @@ export default class LoginScreen extends BaseScreen {
         this.isEmptyPseudo = this.isEmptyPseudo.bind(this);
         this.width = this.state.width;
 
-        getSocket().on('login', message => this.handler(message));
+        //getSocket().on('login', message => this.handler(message));
 
     }
 
@@ -43,6 +43,8 @@ export default class LoginScreen extends BaseScreen {
             team: team.split(" ")[1]
         };
         send('login', obj);
+
+
     }
 
     render() {
@@ -85,6 +87,17 @@ export default class LoginScreen extends BaseScreen {
                             iconRight
                             onPress={() => {
                                 this.connecte(buttons[this.state.selectedIndex], this.state.text);
+                                //this.getImage();
+                                //navigate('QuestionCollectif');
+                            }}
+                        />
+                        <Button
+                            buttonStyle={styles.buttonStyle}
+                            title='Reset'
+
+                            iconRight
+                            onPress={() => {
+                                reset();
                                 //this.getImage();
                                 //navigate('QuestionCollectif');
                             }}
