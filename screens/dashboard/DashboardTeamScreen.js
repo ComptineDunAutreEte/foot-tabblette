@@ -8,6 +8,8 @@ export default class DashboardTeamScreen extends React.Component {
             <View style={styles.container}>
                 <MainTitle title={"Statistiques de votre équipe"}/>
                 <Text>Perso</Text>
+
+
             </View>
         )
     }

@@ -2,7 +2,7 @@ import React from "react";
 import { Dimensions, Text, View, StyleSheet, ScrollView, FlatList, PixelRatio } from 'react-native';
 import {
     VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryLine, VictoryPie,
-    VictoryTheme, VictoryAnimation, VictoryPolarAxis, VictoryGroup, VictoryArea
+    VictoryTheme, VictoryAnimation, VictoryPolarAxis, VictoryGroup, VictoryArea, VictoryStack, VictoryAxis
 } from "victory-native";
 import Colors from "../../constants/Colors";
 import SubTitleComponent from "../../components/title/SubTitleComponent";
@@ -43,8 +43,9 @@ export default class DashboardPersoScreen extends React.Component {
         this.averageResponsesTime = 0;
         this.totalQuestions = 0;
         this.goodResponses = 0;
+        this.tickValues = [];
 
-        userResponses.forEach((userResponse) => {
+        userResponses.forEach((userResponse, i) => {
             const cat = this.goodResponsesByCategories[0].find((c) => c.category === userResponse.category);
             cat.totalQuestions++;
             if (userResponse.isGoodResponse) {
@@ -54,6 +55,7 @@ export default class DashboardPersoScreen extends React.Component {
 
             this.averageResponsesTime += userResponse.responseTime;
             this.totalQuestions++;
+            this.tickValues.push(i + 1);
         });
 
         if (this.totalQuestions > 0) {
@@ -65,6 +67,8 @@ export default class DashboardPersoScreen extends React.Component {
         this.responsesLevels = this.getUserLevel(this.goodResponsesPercentage);
         this.userLevel = this.responsesLevels.level;
         this.userColorLevel = this.responsesLevels.color;
+        console.log(Dimensions.get('window').width * PixelRatio.get());
+        this.chartWidth = this.generalDatas.length > 30 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width;
 
         generalResponses.forEach((generalResponse) => {
             const cat = this.goodResponsesByCategories[1].find((c) => c.category === generalResponse.category);
@@ -159,54 +163,43 @@ export default class DashboardPersoScreen extends React.Component {
                             padding: 15,
                             borderRadius: 5,
                         }}>
-                            <Text style={{fontSize: 30, textAlign: "center", marginBottom: 10, fontWeight: "bold", color: "#fff"}}>{this.userLevel}</Text>
+                            <Text style={{
+                                fontSize: 30,
+                                textAlign: "center",
+                                marginBottom: 10,
+                                fontWeight: "bold",
+                                color: "#fff"
+                            }}>{this.userLevel}</Text>
                             <Text style={{textAlign: "center", color: "#fff"}}>Votre niveau</Text>
                         </View>
                     </View>
 
                     <View style={styles.responseTime}>
                         <SubTitleComponent title={"Temps de réponse par questions"}/>
-                        <VictoryChart height={300} theme={VictoryTheme.material}>
 
-                            <VictoryLabel x={10} y={230} style={styles.label} text={"Temps en secondes"} angle={-90}/>
-                            <VictoryLabel x={300} y={320} style={styles.label} text={"Numéro de question"}/>
+                        <ScrollView horizontal={true}>
+                            <VictoryChart theme={VictoryTheme.material} domain={{x: [0, this.generalDatas.length + 1]}} width={this.chartWidth} height={350}>
+                                <VictoryAxis tickValues={this.tickValues} label="Numéro de question" offsetY={50}/>
+                                <VictoryAxis label="Temps de réponses en secondes" dependentAxis offsetX={50}/>
 
-                            <VictoryLine
-                                style={{
-                                    data: {stroke: "tomato", strokeWidth: 2},
-                                    parent: {border: "1px solid #ccc"}
-                                }}
-                                interpolation="natural"
-                                domain={{x: [1, this.userDatas.length], y: [0, 16]}}
-                                categories={{x: this.nQuestions}}
-                                labels={(datum) => datum.y}
-                                labelComponent={<VictoryLabel renderInPortal dy={20}/>}
-                                data={this.userDatas}
-                            />
+                                <VictoryGroup offset={12} style={{data: {width: 10}}} colorScale={["tomato", "gold"]}>
+                                    <VictoryBar data={this.userDatas}/>
+                                    <VictoryBar data={this.generalDatas}/>
+                                </VictoryGroup>
 
-                            <VictoryLine
-                                style={{
-                                    data: {stroke: "gold", strokeWidth: 2},
-                                    parent: {border: "1px solid #ccc"}
-                                }}
-                                interpolation="natural"
-                                domain={{x: [1, this.generalDatas.length], y: [0, 16]}}
-                                categories={{x: this.nQuestions}}
-                                data={this.generalDatas}
-                            />
-
-                            <VictoryLegend
-                                x={this.state.width / 2 - 50} y={0}
-                                centerTitle
-                                orientation="horizontal"
-                                gutter={20}
-                                style={{border: {stroke: "#eee"}, title: {fontSize: 20}}}
-                                data={[
-                                    {name: "Personnel", symbol: {fill: "tomato"}},
-                                    {name: "Moyenne des autres utilisateurs", symbol: {fill: "gold"}}
-                                ]}
-                            />
-                        </VictoryChart>
+                                <VictoryLegend
+                                    x={this.state.width / 2 - 150} y={0}
+                                    centerTitle
+                                    orientation="horizontal"
+                                    gutter={20}
+                                    style={{border: {stroke: "#eee"}, title: {fontSize: 20}}}
+                                    data={[
+                                        {name: "Personnel", symbol: {fill: "tomato"}},
+                                        {name: "Moyenne des autres utilisateurs", symbol: {fill: "gold"}}
+                                    ]}
+                                />
+                            </VictoryChart>
+                        </ScrollView>
                     </View>
 
                     <View style={styles.container2}>
@@ -337,9 +330,7 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 5
     },
-    bloc3: {
-
-    },
+    bloc3: {},
     statTextBloc: {
         fontSize: 30,
         textAlign: "center",
@@ -348,6 +339,7 @@ const styles = StyleSheet.create({
     responseTime: {
         backgroundColor: '#fff',
         padding: 10,
+        paddingRight: -20,
         borderColor: '#eee',
         borderWidth: 1,
         marginBottom: 20,

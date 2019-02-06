@@ -9,6 +9,7 @@ import { categories } from "../model/categories";
 import { levels } from "../model/levels";
 import HeaderComponent from "../components/HeaderComponent";
 import Text from "react-native-elements/src/text/Text";
+import Colors from "../constants/Colors";
 
 export class HomeScreen extends BaseScreen {
 
@@ -38,11 +39,50 @@ export class HomeScreen extends BaseScreen {
 
         return (
             <View style={styles.container}>
+                <Text style={styles.text}>En attente d'instructions de la table</Text>
 
-                <Text>Attendez</Text>
+                <Button
+                    buttonStyle={styles.buttonStyle}
+                    title='Reset Server'
+                    iconRight
+                    onPress={() => {
+                        reset();
+                    }}
+                />
+                <Button
+                    buttonStyle={styles.buttonStyle}
+                    title='Question collectif v2'
+                    iconRight
+                    onPress={() => {
+                        send('question-collectif-request-v2', 'request');
+                        //navigate('QuestionCollectifV2');
+                    }}
+                />
+
+                <Button
+                    buttonStyle={styles.buttonStyle}
+                    title='Question collectif (parralèle)'
+                    iconRight
+                    onPress={() => {
+                        //send('question-collectif-request-v2', 'request');
+                        navigate('QuestionCollectifParrallel');
+                    }}
+                />
 
 
+                <Button
+                    buttonStyle={styles.buttonStyle}
+                    title='QuestionCollectif'
+                    iconRight
+                    onPress={() => {
+                        send('question-collectif-request', 'request');
+                        //navigate('QuestionCollectif');
+                    }}
+                />
 
+                <Button buttonStyle={styles.buttonStyle} title={"Question simple"} onPress={() => {
+                    navigate("Wait");
+                }}/>
             </View>
         );
     }
@@ -51,12 +91,13 @@ export class HomeScreen extends BaseScreen {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#f8f8f8",
+        backgroundColor: Colors.DARK_BLUE,
         alignItems: 'center',
         justifyContent: 'center',
     },
     text: {
-        fontSize: 30
+        fontSize: 30,
+        color: "#fff"
     },
     buttonStyle: {
         height: 80,
