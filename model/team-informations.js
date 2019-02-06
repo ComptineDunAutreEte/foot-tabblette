@@ -1,6 +1,8 @@
 export class TeamInformations {
     constructor() {
-        this.goodResponses = 0;
-
+        this.responses = {};
+        this.responseTime = 0;
+        this.nGoodResponses = 0;
+        this.nBadResponses = 0;
     }
 }
