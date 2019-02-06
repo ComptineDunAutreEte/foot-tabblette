@@ -1,7 +1,9 @@
-import React, {Component} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {Component, Fragment} from 'react';
+import {Image, StyleSheet ,Text,TouchableNativeFeedback, TouchableWithoutFeedback, Button, TouchableOpacity, View} from 'react-native';
 import {getSocket, send} from "../services/WebsocketService";
 import Dialog from "react-native-dialog";
+import Overlay from 'react-native-modal-overlay';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const answer_template = {
     team: "Team_A",
@@ -24,10 +26,15 @@ export class QuestionCollectif extends Component {
             reponses: [],
             dialog_opened: false,
             reponse: {},
-            answered: 'wait'//play, end
+            answered: 'wait',//play, end,
+            modalVisible: true,
+            modalReady: false
         };
         //send('question-collectif-ready','');
         send('questionn', '');
+        getSocket().on('ready', (data) => {
+            this.setState({modalReady: true});
+        });
         getSocket().on('img', (data) => {
             this.setState({img: data});
             //console.log(data);
@@ -46,7 +53,7 @@ export class QuestionCollectif extends Component {
         })*/
 
     }
-
+    onClose = () => this.setState({ modalVisible: false});
     getView() {
         if (this.state.answered === 'end') {
             return <Text style={styles.text}>Vous avez repondu: {'\n' + this.state.reponse.reponse}</Text>
@@ -90,9 +97,24 @@ export class QuestionCollectif extends Component {
         this.setState({answered: 'end'});
     };
 
+    getModalView(){
+        if(!this.state.modalReady){
+            return <Text style={styles.wait_msg}>Regarder la table!</Text>;
+        }else{
+           return (<TouchableOpacity onPress={} style={styles.asBut}>
+                <Text style={styles.wait_msg}>Je suis prêt</Text>
+            </TouchableOpacity >);
+        }
+    }
+
     render() {
         return (
             <View style={{flex: 1, flexDirection: 'row'}}>
+                <Overlay visible={this.state.modalVisible}
+                         animationType="zoomIn" containerStyle={{backgroundColor: 'white'}}
+                         animationDuration={500}>
+                    {this.getModalView()}
+                </Overlay>
                 <Dialog.Container visible={this.state.dialog_opened}>
                     <Dialog.Title>Vous avez répondu</Dialog.Title>
                     <Dialog.Description>
@@ -125,6 +147,9 @@ export class QuestionCollectif extends Component {
 }
 
 const styles = StyleSheet.create({
+    asBut:{backgroundColor: 'powderblue', padding:50,  borderRadius:50, shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5},
+    wait_msg:{fontSize: 150},
     right: {flex: 1, backgroundColor: 'powderblue'},
     left: {flex: 2, backgroundColor: 'skyblue'},
     blocText: {flex: 2},

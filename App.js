@@ -16,9 +16,9 @@ import DashboardScreen from "./screens/DashboardScreen";
 import { YellowBox } from 'react-native';
 import QuestionScreen from "./screens/QuestionScreen";
 import WaitScreen from "./screens/WaitScreen";
-YellowBox.ignoreWarnings([
+/*YellowBox.ignoreWarnings([
     'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
-]);
+]);*/
 console.disableYellowBox = true;
 
 const Routes = createStackNavigator({

@@ -25,7 +25,7 @@ export class HomeScreen extends BaseScreen {
 
     render() {
         const {navigate} = this.props.navigation;
-        // getSocket().on('navigate', (url) => navigate(url));
+        getSocket().on('navigate', (url) => navigate(url));
 
         waitingScreen((response) => {
 
