@@ -3,11 +3,10 @@ import openSocket from 'socket.io-client';
 import uid from 'uuid/v4';
 import { User } from "../model/user";
 
-const socket = openSocket('http://eeriel.fr:4000/');
-//const socket = openSocket('http://localhost:4000/');
+//const socket = openSocket('http://eeriel.fr:4000/');
+const socket = openSocket('http://localhost:4000/');
 
 //const socket = openSocket('https://server-app-tablet.herokuapp.com/');
-
 
 const user = new User();
 user.uuid = uid();
