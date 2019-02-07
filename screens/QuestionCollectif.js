@@ -1,9 +1,8 @@
-import React, {Component, Fragment} from 'react';
-import {Image, StyleSheet ,Text,TouchableNativeFeedback, TouchableWithoutFeedback, Button, TouchableOpacity, View} from 'react-native';
+import React, {Component} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {getSocket, send} from "../services/WebsocketService";
 import Dialog from "react-native-dialog";
 import Overlay from 'react-native-modal-overlay';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 const answer_template = {
     team: "Team_A",
@@ -31,15 +30,22 @@ export class QuestionCollectif extends Component {
             modalReady: false
         };
         //send('question-collectif-ready','');
-        send('questionn', '');
-        getSocket().on('ready', (data) => {
+        //send('questionn', '');
+        getSocket().on('ready-screen-par' , (data) => {
+            console.log('ready-screen');
             this.setState({modalReady: true});
         });
-        getSocket().on('img', (data) => {
-            this.setState({img: data});
-            //console.log(data);
+
+        getSocket().on('question-screen' , (data) => {
+            console.log('question-screen');
+            this.setState({modalVisible: false});
         });
-        getSocket().on('question-collectif', (question) => {
+
+        getSocket().on('question-collectif-img', (data) => {
+            this.setState({img: data.data});
+            console.log('question-collectif-img');
+        });
+        getSocket().on('question-collectif-par', (question) => {
             if (question !== null) {
                 this.setState({question: question.question});
                 this.setState({reponses: question.reponses});
@@ -53,7 +59,9 @@ export class QuestionCollectif extends Component {
         })*/
 
     }
-    onClose = () => this.setState({ modalVisible: false});
+
+    onClose = () => this.setState({modalVisible: false});
+
     getView() {
         if (this.state.answered === 'end') {
             return <Text style={styles.text}>Vous avez repondu: {'\n' + this.state.reponse.reponse}</Text>
@@ -91,20 +99,20 @@ export class QuestionCollectif extends Component {
     };
 
     handleSoumettre = () => {
-        answer_template.answer = this.state.reponse;
-        getSocket().emit('question-collectif', answer_template);
+        //answer_template.answer = this.state.reponse;
+        send('question-collectif-answer', this.state.reponse);
+        //getSocket().emit('question-collectif-answer', answer_template);
         this.setState({dialog_opened: false});
         this.setState({answered: 'end'});
     };
 
-    getModalView(){
-        if(!this.state.modalReady){
+    getModalView() {
+        if (!this.state.modalReady) {
             return <Text style={styles.wait_msg}>Regarder la table!</Text>;
-        }else{
-           return (<TouchableOpacity onPress={} style={styles.asBut}>
-                <Text style={styles.wait_msg}>Je suis prêt</Text>
-            </TouchableOpacity >);
         }
+        return (<TouchableOpacity onPress={() => send('ready-seq','')} style={styles.asBut}>
+            <Text style={styles.wait_msg}>Je suis prêt</Text>
+        </TouchableOpacity>);
     }
 
     render() {
@@ -147,9 +155,11 @@ export class QuestionCollectif extends Component {
 }
 
 const styles = StyleSheet.create({
-    asBut:{backgroundColor: 'powderblue', padding:50,  borderRadius:50, shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.5},
-    wait_msg:{fontSize: 150},
+    asBut: {
+        backgroundColor: 'powderblue', padding: 50, borderRadius: 50, shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.5
+    },
+    wait_msg: {fontSize: 150},
     right: {flex: 1, backgroundColor: 'powderblue'},
     left: {flex: 2, backgroundColor: 'skyblue'},
     blocText: {flex: 2},

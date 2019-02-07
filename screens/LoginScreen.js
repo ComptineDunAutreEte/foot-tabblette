@@ -44,7 +44,7 @@ export default class LoginScreen extends BaseScreen {
         const buttons = ['Team A', 'Team B'];
         const {selectedIndex, isEmptyPseudo, userLevel} = this.state;
         const {navigate} = this.props.navigation;
-        getSocket().on('navigate', (url) => navigate(url));
+        getSocket().on('navigate', (url) => navigate(url.data));
         return (
             <View style={styles.topView}>
                 <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoidingView}>
