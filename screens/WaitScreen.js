@@ -4,6 +4,7 @@ import HeaderComponent from "../components/HeaderComponent";
 import { Button } from 'react-native-elements';
 import BaseScreen from "./BaseScreen";
 import { confirmReady, getSimpleQuestion, retrieveQuestion, send } from "../services/WebsocketService";
+import Colors from "../constants/Colors";
 
 export default class WaitScreen extends BaseScreen {
 
@@ -30,10 +31,17 @@ export default class WaitScreen extends BaseScreen {
 
                     <Button
                         buttonStyle={{
-                            height: 80,
-                            marginTop: 10
+                            backgroundColor: Colors.WHITE,
+                            width: 200,
+                            padding: 20,
+                            borderRadius: 5,
                         }}
                         title="C'est partit !"
+                        titleStyle={{
+                            color: Colors.DARK_BLUE,
+                            fontSize: 20
+                        }}
+
                         iconRight
                         onPress={() => {
                             this.setState({isUserReady: true});
@@ -48,7 +56,11 @@ export default class WaitScreen extends BaseScreen {
         } else {
             getSimpleQuestion((response) => {
                 if (response.isEverybodyReady) {
-                    this.props.navigation.navigate("Question", {question: response.question})
+                    this.props.navigation.navigate("Question", {
+                        questionCounter: response.questionCounter,
+                        question: response.question,
+                        maxTimer: response.maxTimer
+                    })
                 }
             });
 
@@ -70,11 +82,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF'
+        backgroundColor: Colors.DARK_BLUE
     },
     instructions: {
         textAlign: 'center',
-        color: '#333333',
+        color: "#fff",
         marginBottom: 30,
         fontSize: 35
     }

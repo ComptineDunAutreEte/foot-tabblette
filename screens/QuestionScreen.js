@@ -1,6 +1,6 @@
 import React from "react";
 import BaseScreen from "./BaseScreen";
-import {StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import HeaderComponent from "../components/HeaderComponent";
 import SubTitleComponent from "../components/title/SubTitleComponent";
 import MainTitle from "../components/title/MainTitleComponent";
@@ -13,36 +13,69 @@ export default class QuestionScreen extends BaseScreen {
     static navigationOptions = {
         title: 'Welcome',
         header: (
-            <HeaderComponent pseudo={this.pseudo} />
+            <HeaderComponent pseudo={this.pseudo}/>
         ),
     };
 
     constructor(props) {
         super(props);
 
-        // this.gameService.setIsInGame(true);
+        const {navigation} = this.props;
+        this.question = navigation.getParam('question');
+        this.questionCounter = navigation.getParam('questionCounter');
+        this.maxTimer = navigation.getParam('maxTimer');
 
         this.state = {
             selectedResponse: null,
+            timer: this.maxTimer,
+            isQuestionSent: false,
+            percentage: 100
         };
+    }
 
-        const { navigation } = this.props;
-        this.question = navigation.getParam('question');
-        console.log("question", this.question);
+    componentDidMount() {
+        const intervalTimer = 100;
+        const intervalRatio = (1000 / intervalTimer);
+        const virtualMaxTimer = this.maxTimer * intervalRatio;
+        let virtualTimer = virtualMaxTimer;
+
+        this.interval = setInterval(() => {
+            virtualTimer--;
+            const barPercentage = virtualTimer * 100 / virtualMaxTimer;
+            const realTimer = Math.ceil(virtualTimer / intervalRatio);
+            this.setState({timer: realTimer});
+            this.setState({percentage: barPercentage});
+        }, intervalTimer);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
 
     render() {
-        const { state } = this.props.navigation;
+        const {state} = this.props.navigation;
+
+        const userDatas = {
+            questionId: this.question.id,
+            userResponse: this.state.selectedResponse,
+            userResponseTime: this.maxTimer - this.state.timer
+        };
+
+        if (this.state.timer === 0 || this.state.isQuestionSent === true) {
+            clearInterval(this.interval);
+            this.sendResponse(userDatas)
+        }
+
         return (
             <View style={styles.container}>
                 <View style={styles.stats}>
-                    <SubTitleComponent title={"Statistiques de la partie"} />
+                    <SubTitleComponent title={"Statistiques de la partie"}/>
                     <Text>Stats</Text>
                 </View>
                 <View style={styles.main}>
                     <View style={{alignItems: 'center'}}>
-                        <MainTitle title={"Question 1"} />
+                        <MainTitle title={"Question " + this.questionCounter}/>
                         <SubTitleComponent title={this.question.question}/>
                     </View>
 
@@ -50,7 +83,8 @@ export default class QuestionScreen extends BaseScreen {
                         {
                             this.question.responses.map((response) => {
                                 return (
-                                    <Button key={response.id} buttonStyle={this.state.selectedResponse === response.id ? styles.buttonPressed : styles.buttonResponse}
+                                    <Button key={response.id}
+                                            buttonStyle={this.state.selectedResponse === response.id ? styles.buttonPressed : styles.buttonResponse}
                                             onPress={() => {
                                                 this.setState({selectedResponse: response.id})
                                             }}
@@ -61,31 +95,46 @@ export default class QuestionScreen extends BaseScreen {
                         }
                     </View>
 
+
                     <View style={styles.blocValidate}>
                         <Button buttonStyle={styles.buttonValidate}
-                                disabled={this.state.selectedResponse === null}
+                                disabled={this.state.selectedResponse === null || this.state.isQuestionSent === true}
                                 title={"Valider votre réponse"}
-                        onPress={() => {
-                            console.log(this.question.id);
+                                onPress={() => {
 
-                            console.log(this.state.selectedResponse);
+                                    this.sendResponse(userDatas);
 
-                            const data = {
-                                questionId: this.question.id,
-                                userResponse: this.state.selectedResponse
-                            };
+                                }}/>
+                    </View>
 
-                            send("ask-simple-question", data);
-
-                            getSimpleQuestionResponse((response) => {
-                                console.log("response", response);
-                            })
-                        }} />
+                    <View style={styles.timerBg}>
+                        <View style={{position: "absolute", zIndex: 11, padding: 10}}>
+                            <Text style={{color: "#fff", fontSize: 20}}>Temps restant : {this.state.timer}</Text>
+                        </View>
+                        <View style={{
+                            height: 38,
+                            position: "absolute",
+                            zIndex: 10,
+                            backgroundColor: Colors.DARK_BLUE,
+                            width: `${this.state.percentage}%`,
+                            borderRadius: 10,
+                        }}>
+                            <Text style={{color: Colors.DARK_BLUE}}>.</Text>
+                        </View>
                     </View>
                 </View>
             </View>
         );
+    }
 
+    sendResponse(data) {
+        send("ask-simple-question", data);
+
+        getSimpleQuestionResponse((response) => {
+            this.props.navigation.navigate("ResponseSimpleQuestion", {
+                isCorrectPlayerResponse: response.isCorrectPlayerResponse
+            });
+        })
     }
 }
 
@@ -163,6 +212,17 @@ const styles = StyleSheet.create({
     buttonValidate: {
         backgroundColor: Colors.MEDIUM_GREEN,
         padding: 10
-    }
+    },
+    timerBg: {
+        width: 400,
+        marginLeft: 30,
+        marginRight: 30,
+        backgroundColor: Colors.LIGHT_BLUE,
+        borderRadius: 10,
+        borderColor: Colors.DARK_BLUE,
+        borderWidth: 1,
+        marginTop: 30,
+        height: 40,
+    },
 });
 

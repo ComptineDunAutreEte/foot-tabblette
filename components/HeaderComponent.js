@@ -31,7 +31,6 @@ class HeaderComponent extends React.Component {
         });
 
         this.simpleAsyncStorageService.get('playerLevel').then((level) => {
-            console.log(level);
             this.setState({
                 playerLevel: level
             })
@@ -55,9 +54,10 @@ class HeaderComponent extends React.Component {
     render() {
         const {pseudo, playerLevel} = this.state;
 
+
         return (
             <View style={styles.header}>
-                <View style={styles.logo}>
+                <View style={{flexGrow: 1}}>
                     <Text style={styles.headerTitle}>FOOTBOARD</Text>
                 </View>
                 <View style={styles.menu}>
@@ -102,6 +102,7 @@ class HeaderComponent extends React.Component {
             </View>
         );
     }
+
 }
 
 const styles = StyleSheet.create({
@@ -118,14 +119,12 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 3,
         flexDirection: 'row',
-        width: "100%"
-
+        width: "100%",
     },
     headerTitle: {
         color: Colors.DARK_BLUE,
         fontSize: 25,
         backgroundColor: "#fff",
-        width: Dimensions.get('window').width * PixelRatio.get() / 6,
     },
     headerModalTitle: {
         color: Colors.DARK_BLUE,
@@ -136,15 +135,16 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     menu: {
-        width: Dimensions.get('window').width * PixelRatio.get() / 3.5,
         backgroundColor: "#fff",
-        alignItems: "center"
+        alignItems: "center",
+        flexGrow: 1
     },
     profil: {
-        width: Dimensions.get('window').width * PixelRatio.get() / 6,
         backgroundColor: "#fff",
-        alignItems: "center"
+        alignItems: "center",
+        flexGrow: 1
     },
+
     buttonMenu: {
         backgroundColor: Colors.DARK_BLUE,
         width: 200,
