@@ -1,10 +1,9 @@
 import React from "react";
-import { Dimensions, Text, View, StyleSheet, ScrollView, FlatList, PixelRatio } from 'react-native';
+import { Dimensions, Text, View, StyleSheet, ScrollView } from 'react-native';
 import {
-    VictoryBar, VictoryChart, VictoryLabel, VictoryLegend, VictoryLine, VictoryPie,
-    VictoryTheme, VictoryAnimation, VictoryPolarAxis, VictoryGroup, VictoryArea, VictoryStack, VictoryAxis
+    VictoryBar, VictoryChart, VictoryLabel, VictoryLegend,
+    VictoryTheme, VictoryPolarAxis, VictoryGroup, VictoryArea, VictoryAxis
 } from "victory-native";
-import Colors from "../../constants/Colors";
 import SubTitleComponent from "../../components/title/SubTitleComponent";
 import CategoryDetailComponent from "../../components/dashboard/CategoryDetailComponent";
 import { categories } from "../../model/categories";
@@ -20,6 +19,9 @@ export default class DashboardPersoScreen extends React.Component {
         userResponsesService = new UserResponseInformationsService();
         const userResponses = userResponsesService.createResponses();
         const generalResponses = userResponsesService.createResponses(userResponses.length);
+
+        console.log("userresponses", userResponses.length)
+        console.log("generalResponses", generalResponses.length)
 
         this.userDatas = this.retrieveResponses(userResponses);
         this.generalDatas = this.retrieveResponses(generalResponses);
@@ -67,8 +69,7 @@ export default class DashboardPersoScreen extends React.Component {
         this.responsesLevels = this.getUserLevel(this.goodResponsesPercentage);
         this.userLevel = this.responsesLevels.level;
         this.userColorLevel = this.responsesLevels.color;
-        console.log(Dimensions.get('window').width * PixelRatio.get());
-        this.chartWidth = this.generalDatas.length > 30 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width;
+        this.chartWidth = this.generalDatas.length > 20 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width - 200;
 
         generalResponses.forEach((generalResponse) => {
             const cat = this.goodResponsesByCategories[1].find((c) => c.category === generalResponse.category);
@@ -179,12 +180,12 @@ export default class DashboardPersoScreen extends React.Component {
 
                         <ScrollView horizontal={true}>
                             <VictoryChart theme={VictoryTheme.material} domain={{x: [0, this.generalDatas.length + 1]}} width={this.chartWidth} height={350}>
-                                <VictoryAxis tickValues={this.tickValues} label="Numéro de question" offsetY={50}/>
-                                <VictoryAxis label="Temps de réponses en secondes" dependentAxis offsetX={50}/>
+                                <VictoryAxis tickValues={this.tickValues} label="Numéro de question" offsetY={49} style={{ axisLabel: {padding: 30} }}/>
+                                <VictoryAxis label="Temps de réponses en secondes" dependentAxis offsetX={50} style={{ axisLabel: {padding: 30} }} />
 
                                 <VictoryGroup offset={12} style={{data: {width: 10}}} colorScale={["tomato", "gold"]}>
-                                    <VictoryBar data={this.userDatas}/>
-                                    <VictoryBar data={this.generalDatas}/>
+                                    <VictoryBar data={this.userDatas} labels={(d) => `${d.y}`}/>
+                                    <VictoryBar data={this.generalDatas} labels={(d) => `${d.y}`} />
                                 </VictoryGroup>
 
                                 <VictoryLegend
@@ -271,8 +272,6 @@ export default class DashboardPersoScreen extends React.Component {
             </View>
         )
     }
-
-    _renderItem = ({item}) => <Text>{item.email}</Text>
 
     getMaxima(data) {
         const groupedData = Object.keys(data[0]).reduce((memo, key) => {

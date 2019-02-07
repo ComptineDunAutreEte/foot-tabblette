@@ -1,27 +1,24 @@
 import { UserResponseInformations } from "../model/user-response-informations";
 import { categories } from "../model/categories";
+import { getRandom } from "../constants/Utils";
 
 export class UserResponseInformationsService {
     createResponses(nResponses = null) {
         if (!nResponses) {
-            nResponses = this.getRandom(15, 40);
+            nResponses = getRandom(15, 30);
         }
 
-        const userResponses = [];
+        let userResponses = [];
 
-        for (let i = 0; i < nResponses - 1; i++) {
+        for (let i = 0; i < nResponses; i++) {
             const response = new UserResponseInformations();
-            response.category = categories[this.getRandom(0, categories.length)].key;
+            response.category = categories[getRandom(0, categories.length)].key;
             response.isGoodResponse = Math.random() >= 0.5;
-            response.responseTime = this.getRandom(30, 150) / 10;
+            response.responseTime = getRandom(30, 150) / 10;
 
             userResponses.push(response);
         }
 
         return userResponses;
-    }
-
-    getRandom(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
     }
 }

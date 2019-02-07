@@ -79,17 +79,19 @@ class HeaderComponent extends React.Component {
 
                 <Modal animationType="slide" transparent={false} visible={this.state.modalVisible}>
                     <View style={{flexDirection: 'row'}}>
-                        <View style={{width: Dimensions.get('window').width - 200}}>
-                            <Text>
+                        <View style={{flex: 1}}>
+                            <Text style={styles.headerModalTitle}>
                                 Niveau : {playerLevel} en foot
                             </Text>
                         </View>
-                        <View>
+                        <View style={{alignItems: "center", marginRight: 20, marginTop: 10}}>
                             <Button
                                 title={"Fermer les statistiques"}
                                 onPress={() => {
                                     this.setModalVisible(false);
                                 }}
+                                buttonStyle={styles.buttonMenu}
+                                titleStyle={styles.buttonTextMenu}
                             />
                         </View>
                     </View>
@@ -124,6 +126,14 @@ const styles = StyleSheet.create({
         fontSize: 25,
         backgroundColor: "#fff",
         width: Dimensions.get('window').width * PixelRatio.get() / 6,
+    },
+    headerModalTitle: {
+        color: Colors.DARK_BLUE,
+        fontSize: 25,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        marginLeft: 20,
+        marginTop: 10
     },
     menu: {
         width: Dimensions.get('window').width * PixelRatio.get() / 3.5,

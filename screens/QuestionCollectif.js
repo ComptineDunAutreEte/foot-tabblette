@@ -109,6 +109,8 @@ export class QuestionCollectif extends Component {
     getModalView() {
         if (!this.state.modalReady) {
             return <Text style={styles.wait_msg}>Regarder la table!</Text>;
+
+
         }
         return (<TouchableOpacity onPress={() => send('ready-seq','')} style={styles.asBut}>
             <Text style={styles.wait_msg}>Je suis prêt</Text>

@@ -1,7 +1,7 @@
 {
-  "hostType": "lan",
+  "hostType": "localhost",
   "lanType": "ip",
-  "dev": false,
-  "minify": true,
-  "urlRandomness": "m5-mc9"
+  "dev": true,
+  "minify": false,
+  "urlRandomness": "gi-yxy"
 }
