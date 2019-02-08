@@ -15,9 +15,6 @@ import { User } from "../model/user";
 
 const socket = openSocket('http://eeriel.fr:4000/');
 //const socket = openSocket('http://localhost:4000/');
->>>>>>> 22b2a53bb85fb13a0456853d9e3f4f3aaaf0fcba
-
-const socket = openSocket('https://server-app-tablet.herokuapp.com/');
 
 const user = new User();
 user.uuid = uid();
