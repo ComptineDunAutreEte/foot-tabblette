@@ -122,6 +122,7 @@ export default class LoginScreen extends BaseScreen {
 
     connecte(infos) {
         getUser().pseudo = infos.pseudo;
+        getUser().team = infos.team.split(" ")[1];
         let obj = {
             team: infos.team.split(" ")[1],
             pseudo: infos.pseudo,
