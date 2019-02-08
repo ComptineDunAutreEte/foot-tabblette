@@ -88,7 +88,7 @@ export default class LoginScreen extends BaseScreen {
                         <Button
                             buttonStyle={styles.buttonStyle}
                             title='Se connecter'
-
+                            disabled={this.state.isEmptyPseudo === true}
                             iconRight
                             onPress={() => {
                                 this.simpleAsyncStorageService.set('pseudo', this.state.text);
@@ -119,6 +119,7 @@ export default class LoginScreen extends BaseScreen {
         );
     }
 
+
     connecte(infos) {
         getUser().pseudo = infos.pseudo;
         let obj = {
@@ -131,7 +132,7 @@ export default class LoginScreen extends BaseScreen {
     }
 
     isEmptyPseudo(isEmpty) {
-        this.setState({isEmpty});
+        this.setState({isEmptyPseudo: isEmpty});
     }
 
     updateIndex(selectedIndex) {
