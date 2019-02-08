@@ -101,9 +101,8 @@ export default class QuestionScreen extends BaseScreen {
                                 disabled={this.state.selectedResponse === null || this.state.isQuestionSent === true}
                                 title={"Valider votre réponse"}
                                 onPress={() => {
-
+                                    this.setState({isQuestionSent: true});
                                     this.sendResponse(userDatas);
-
                                 }}/>
                     </View>
 
