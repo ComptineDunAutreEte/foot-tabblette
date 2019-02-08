@@ -3,6 +3,7 @@ import openSocket from 'socket.io-client';
 import uid from 'uuid/v4';
 import { User } from "../model/user";
 
+
 //const socket = openSocket('http://eeriel.fr:4000/');
 /*const socket = openSocket('http://localhost:4000/', {
     reconnection: true,
@@ -11,6 +12,10 @@ import { User } from "../model/user";
     reconnectionAttempts: Infinity
 });*/
 // const socket = openSocket('http://192.168.1.30:4000/');
+
+const socket = openSocket('http://eeriel.fr:4000/');
+//const socket = openSocket('http://localhost:4000/');
+>>>>>>> 22b2a53bb85fb13a0456853d9e3f4f3aaaf0fcba
 
 const socket = openSocket('https://server-app-tablet.herokuapp.com/');
 

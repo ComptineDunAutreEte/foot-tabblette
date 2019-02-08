@@ -25,7 +25,6 @@ export default class DashboardTeamScreen extends React.Component {
         this.aTime = [];
         this.bTime = [];
         this.tickValues = [];
-        this.tickScoreY = [];
         this.aTeamTotalScore = 0;
         this.bTeamTotalScore = 0;
 
@@ -50,9 +49,6 @@ export default class DashboardTeamScreen extends React.Component {
         for (let i = 0; i < this.aTeamTotalScore; i++) {
             this.tickScoreY += i;
         }
-
-        console.log("team a", this.aResponses.length);
-        console.log("team b", this.bResponses.length);
 
         this.bResponses.forEach((response, i) => {
             this.bTime.push(response.responseTime);
