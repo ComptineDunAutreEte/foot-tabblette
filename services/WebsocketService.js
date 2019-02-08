@@ -4,9 +4,15 @@ import uid from 'uuid/v4';
 import { User } from "../model/user";
 
 //const socket = openSocket('http://eeriel.fr:4000/');
-const socket = openSocket('http://localhost:4000/');
+/*const socket = openSocket('http://localhost:4000/', {
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax : 5000,
+    reconnectionAttempts: Infinity
+});*/
+// const socket = openSocket('http://192.168.1.30:4000/');
 
-//const socket = openSocket('https://server-app-tablet.herokuapp.com/');
+const socket = openSocket('https://server-app-tablet.herokuapp.com/');
 
 const user = new User();
 user.uuid = uid();
@@ -30,6 +36,7 @@ function setNavigation(_navigation) {
 function send(chanel, _data){
     let message = {
         uuid: user.uuid,
+        team: user.team,
         type: 'tablet',
         data: _data
     };

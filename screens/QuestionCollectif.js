@@ -46,6 +46,7 @@ export class QuestionCollectif extends Component {
             console.log('question-collectif-img');
         });
         getSocket().on('question-collectif-par', (question) => {
+            console.log('question-collectif-par', question);
             if (question !== null) {
                 this.setState({question: question.question});
                 this.setState({reponses: question.reponses});
@@ -100,10 +101,10 @@ export class QuestionCollectif extends Component {
 
     handleSoumettre = () => {
         //answer_template.answer = this.state.reponse;
-        send('question-collectif-answer', this.state.reponse);
+        send('question-collectif-seq-answer', this.state.reponse);
         //getSocket().emit('question-collectif-answer', answer_template);
         this.setState({dialog_opened: false});
-        this.setState({answered: 'end'});
+        //this.setState({answered: 'end'});
     };
 
     getModalView() {

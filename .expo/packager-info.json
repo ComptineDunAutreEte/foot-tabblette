@@ -1,1 +1,9 @@
-{}
+{
+  "devToolsPort": 19002,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": "https://nx-pkx.anonymous.footboard-tablette.exp.direct",
+  "packagerNgrokUrl": "https://packager.nx-pkx.anonymous.footboard-tablette.exp.direct",
+  "ngrokPid": 46427
+}
