@@ -34,6 +34,21 @@ export class QuestionCollectif extends Component {
         getSocket().on('ready-screen-par' , (data) => {
             console.log('ready-screen');
             this.setState({modalReady: true});
+            this.forceUpdate();
+        });
+
+        getSocket().on('wait-screen' , (data) => {
+           // console.log('ready-screen');
+            // this.setState({dialog_opened: true});
+            //this.state.dialog_opened
+
+            setTimeout(() => {this.setState({modalVisible: true});
+                this.setState({modalVisible: true});
+                this.setState({modalReady: false});
+            }, 1000);
+
+            this.forceUpdate();
+            console.log('wait-screen');
         });
 
         getSocket().on('question-screen' , (data) => {
@@ -73,7 +88,8 @@ export class QuestionCollectif extends Component {
                     style={styles.container}
                     onPress={() => {
                         this.setState({reponse: item});
-                        this.setState({dialog_opened: true})
+                        this.setState({dialog_opened: true});
+                        //this.setState({answered: 'end'});
                     }}>
                     {
 
@@ -104,14 +120,12 @@ export class QuestionCollectif extends Component {
         send('question-collectif-seq-answer', this.state.reponse);
         //getSocket().emit('question-collectif-answer', answer_template);
         this.setState({dialog_opened: false});
-        //this.setState({answered: 'end'});
+        this.setState({answered: 'end'});
     };
 
     getModalView() {
         if (!this.state.modalReady) {
-            return <Text style={styles.wait_msg}>Regarder la table!</Text>;
-
-
+            return <Text style={styles.wait_msg}>Regardez la table!</Text>;
         }
         return (<TouchableOpacity onPress={() => send('ready-seq','')} style={styles.asBut}>
             <Text style={styles.wait_msg}>Je suis prêt</Text>

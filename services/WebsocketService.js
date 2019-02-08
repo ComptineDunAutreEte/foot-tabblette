@@ -11,12 +11,10 @@ import { User } from "../model/user";
     reconnectionDelayMax : 5000,
     reconnectionAttempts: Infinity
 });*/
-// const socket = openSocket('http://192.168.1.30:4000/');
+ // const socket = openSocket('http://10.212.106.107:4000/');
 
-const socket = openSocket('http://eeriel.fr:4000/');
+// const socket = openSocket('http://eeriel.fr:4000/');
 //const socket = openSocket('http://localhost:4000/');
->>>>>>> 22b2a53bb85fb13a0456853d9e3f4f3aaaf0fcba
-
 const socket = openSocket('https://server-app-tablet.herokuapp.com/');
 
 const user = new User();
