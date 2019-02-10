@@ -4,17 +4,8 @@ import uid from 'uuid/v4';
 import { User } from "../model/user";
 
 
-//const socket = openSocket('http://eeriel.fr:4000/');
-/*const socket = openSocket('http://localhost:4000/', {
-    reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax : 5000,
-    reconnectionAttempts: Infinity
-});*/
-// const socket = openSocket('http://192.168.1.30:4000/');
-
 const socket = openSocket('http://eeriel.fr:4000/');
-//const socket = openSocket('http://localhost:4000/');
+//const socket = openSocket('https://server-app-tablet.herokuapp.com/');
 
 const user = new User();
 user.uuid = uid();
@@ -78,9 +69,15 @@ function getSimpleQuestionResponse(callback) {
     socket.on("response-simple-question", response => callback(response));
 }
 
+function dashboardDataRequest(callback) {
+    socket.on("dashboard-datas", (response) => callback(response));
+}
+
 
 function sedeconnecte(toSend) {
     socket.emit('disconnect', toSend);
 }
 
-export { getUser, sedeconnecte, getImage, getSocket, reset, send, setNavigation, getSimpleQuestion, getSimpleQuestionResponse, waitingScreen };
+export { getUser, sedeconnecte, getImage, getSocket, reset, send, setNavigation,
+    getSimpleQuestion, getSimpleQuestionResponse, waitingScreen, dashboardDataRequest
+};

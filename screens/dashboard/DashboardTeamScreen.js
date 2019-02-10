@@ -6,7 +6,6 @@ import {
     VictoryTheme
 } from "victory-native";
 import SubTitleComponent from "../../components/title/SubTitleComponent";
-import { TeamInformationsService } from "../../services/TeamInformationsService";
 
 export default class DashboardTeamScreen extends React.Component {
 
@@ -18,12 +17,13 @@ export default class DashboardTeamScreen extends React.Component {
             height: Dimensions.get('window').height,
         };
 
-        const teamInformationsService = new TeamInformationsService(2);
-        this.aResponses = teamInformationsService.createInformations();
-        this.bResponses = teamInformationsService.createInformations(this.aResponses.length);
+        console.log("teamDatas", this.props.teamDatas);
 
-        this.aTime = [];
-        this.bTime = [];
+        this.aResponses = this.props.teamDatas.aResponses;
+        this.bResponses = this.props.teamDatas.bResponses;
+
+        this.aTimes = [];
+        this.bTimes = [];
         this.tickValues = [];
         this.aTeamTotalScore = 0;
         this.bTeamTotalScore = 0;
@@ -36,7 +36,10 @@ export default class DashboardTeamScreen extends React.Component {
         ];
 
         this.aResponses.forEach((response, i) => {
-            this.aTime.push(response.responseTime);
+            this.aTimes.push({
+                x: i + 1,
+                y: response.responseTime
+            });
             this.tickValues.push(i + 1);
             this.aTeamTotalScore += response.nGoodResponses;
 
@@ -51,7 +54,10 @@ export default class DashboardTeamScreen extends React.Component {
         }
 
         this.bResponses.forEach((response, i) => {
-            this.bTime.push(response.responseTime);
+            this.bTimes.push({
+                x: i + 1,
+                y: response.responseTime
+            });
             this.bTeamTotalScore += response.nGoodResponses;
 
             this.bTeamTotalScoreGraph.push({
@@ -61,7 +67,7 @@ export default class DashboardTeamScreen extends React.Component {
         });
 
 
-        this.chartWidth = this.bTime.length > 20 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width - 200;
+        this.chartWidth = this.bTimes.length > 20 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width - 200;
     }
 
     render() {
@@ -76,7 +82,7 @@ export default class DashboardTeamScreen extends React.Component {
                                 textAlign: "center",
                                 marginBottom: 10,
                                 fontWeight: "bold"
-                            }}>Score : {this.aTeamTotalScore}</Text>
+                            }}>Score : {this.aTeamTotalScore} / {this.aTeamTotalScoreGraph.length - 1}</Text>
                             <Text style={{textAlign: "center"}}>Votre team</Text>
                         </View>
 
@@ -85,7 +91,7 @@ export default class DashboardTeamScreen extends React.Component {
                                 fontSize: 30,
                                 textAlign: "center",
                                 marginBottom: 10,
-                            }}>Score : {this.bTeamTotalScore}</Text>
+                            }}>Score : {this.bTeamTotalScore} / {this.bTeamTotalScoreGraph.length - 1}</Text>
                             <Text style={{textAlign: "center"}}>Team adverse</Text>
                         </View>
 
@@ -140,13 +146,13 @@ export default class DashboardTeamScreen extends React.Component {
                         <SubTitleComponent title={"Temps de réponse par questions"}/>
 
                         <ScrollView horizontal={true}>
-                            <VictoryChart theme={VictoryTheme.material} domain={{x: [0, this.aTime.length + 1]}} width={this.chartWidth} height={350}>
+                            <VictoryChart theme={VictoryTheme.material} domain={{x: [0, this.aTimes.length + 1]}} width={this.chartWidth} height={350}>
                                 <VictoryAxis tickValues={this.tickValues} label="Numéro de question" offsetY={49} style={{axisLabel: {padding: 30}}}/>
                                 <VictoryAxis label="Temps de réponses en secondes" dependentAxis offsetX={50} style={{axisLabel: {padding: 30}}}/>
 
                                 <VictoryGroup offset={12} style={{data: {width: 10}}} colorScale={["magenta", "cyan"]}>
-                                    <VictoryBar data={this.aTime} labels={(d) => `${d._y}`}/>
-                                    <VictoryBar data={this.bTime} labels={(d) => `${d._y}`}/>
+                                    <VictoryBar data={this.aTimes} labels={(d) => `${d._y}`}/>
+                                    <VictoryBar data={this.bTimes} labels={(d) => `${d._y}`}/>
                                 </VictoryGroup>
 
                                 <VictoryLegend

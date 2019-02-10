@@ -30,7 +30,6 @@ export class HomeScreen extends BaseScreen {
         getSocket().on('navigate', (url) => navigate(url));
 
         waitingScreen((response) => {
-
             if (response.isReady === true) {
                 console.log("ready");
                 navigate("Wait");

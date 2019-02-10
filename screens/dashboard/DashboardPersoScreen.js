@@ -8,7 +8,6 @@ import SubTitleComponent from "../../components/title/SubTitleComponent";
 import CategoryDetailComponent from "../../components/dashboard/CategoryDetailComponent";
 import { categories } from "../../model/categories";
 import MainTitle from "../../components/title/MainTitleComponent";
-import { UserResponseInformationsService } from "../../services/UserResponseInformationsService";
 import { responseLevels } from "../../model/response-levels";
 
 export default class DashboardPersoScreen extends React.Component {
@@ -16,16 +15,13 @@ export default class DashboardPersoScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        userResponsesService = new UserResponseInformationsService();
-        const userResponses = userResponsesService.createResponses();
-        const generalResponses = userResponsesService.createResponses(userResponses.length);
+        const persoDatas = this.props.persoDatas;
 
-        console.log("userresponses", userResponses.length)
-        console.log("generalResponses", generalResponses.length)
+        const userResponses = persoDatas.userResponses;
+        const generalResponses = persoDatas.generalResponses;
 
         this.userDatas = this.retrieveResponses(userResponses);
         this.generalDatas = this.retrieveResponses(generalResponses);
-
 
         this.goodResponsesByCategories = [[], []];
 
