@@ -1,13 +1,14 @@
 import React from "react";
-import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Animated } from 'react-native';
 import BaseScreen from "./BaseScreen";
 import Colors from "../constants/Colors";
-import { Button } from "react-native-elements";
 import { menuFields } from "../constants/dashboard/MenuFields";
 import DashboardPersoScreen from "./dashboard/DashboardPersoScreen";
 import DashboardTeamScreen from "./dashboard/DashboardTeamScreen";
 import DashboardGeneralScreen from "./dashboard/DashboardGeneralScreen";
 import { dashboardDataRequest, send } from "../services/WebsocketService";
+import { TabView, SceneMap } from 'react-native-tab-view';
+import { DashboardNoDatasScreen } from "./dashboard/DashboardNoDatasScreen";
 
 export default class DashboardScreen extends BaseScreen {
 
@@ -16,12 +17,13 @@ export default class DashboardScreen extends BaseScreen {
 
         this.state = {
             selectedStats: 'team',
-            dashboardDatas: null
+            dashboardDatas: null,
+            index: 0,
+            routes: menuFields
         };
 
         send("dashboard-request", {request: true});
         dashboardDataRequest((datas) => {
-            console.log("datas", datas);
             this.setState({dashboardDatas: datas});
         });
 
@@ -39,49 +41,59 @@ export default class DashboardScreen extends BaseScreen {
         } else {
             console.log("not null");
             return (
-                <View style={styles.container}>
-                    <View style={styles.menu}>
-                        {
-                            menuFields.map((menu) => {
-                                return (
-                                    <Button key={menu.key}
-                                            buttonStyle={this.state.selectedStats === menu.key ? styles.buttonMenuSelected : styles.buttonMenu}
-                                            onPress={() => {
-                                                this.setState({selectedStats: menu.key})
-                                            }}
-                                            title={menu.label}
-                                            titleStyle={this.state.selectedStats === menu.key ? styles.buttonMenuSelectedText : styles.buttonMenuText}/>
-                                );
-                            })
-                        }
-                    </View>
 
-                    <View style={styles.statistiques}>{this._handleView()}</View>
-                </View>
+                <TabView
+                    navigationState={this.state}
+                    renderScene={SceneMap({
+                        perso: this.state.dashboardDatas.perso.userResponses.length === 0 ? this.emptyDatasScreen : this.persoScreen,
+                        team: this.teamScreen,
+                        general: this.generalScreen,
+                    })}
+                    renderTabBar={this._renderTabBar}
+                    onIndexChange={index => this.setState({index})}
+                    initialLayout={{width: Dimensions.get('window').width}}
+                />
+
+
             );
         }
     }
 
-    _handleView() {
-        let view = null;
+    persoScreen = () => (
+        <DashboardPersoScreen persoDatas={this.state.dashboardDatas.perso}/>
+    );
 
-        console.log("dashboardDatas", this.state.dashboardDatas);
+    teamScreen = () => (
+        <DashboardTeamScreen teamDatas={this.state.dashboardDatas.team}/>
+    );
 
-        switch (this.state.selectedStats) {
-            case "perso":
-                view = <DashboardPersoScreen persoDatas={this.state.dashboardDatas.perso} />;
-                break;
-            case "team":
-                view = <DashboardTeamScreen teamDatas={this.state.dashboardDatas.team} />;
-                break;
-            case "general":
-                view = <DashboardGeneralScreen/>;
-                break;
-        }
+    generalScreen = () => (
+        <DashboardGeneralScreen />
+    );
 
-        return view;
-    }
+    emptyDatasScreen = () => (
+        <DashboardNoDatasScreen/>
+    );
+
+    _renderTabBar = props => {
+        const inputRange = props.navigationState.routes.map((x, i) => i);
+
+        return (
+            <View style={styles.tabBar}>
+                {props.navigationState.routes.map((route, i) => {
+                    return (
+                        <TouchableOpacity
+                            style={this.state.index === i ? styles.tabItemSelected : styles.tabItem}
+                            onPress={() => this.setState({ index: i })}>
+                            <Animated.Text style={this.state.index === i ? styles.textSelected : styles.text}>{route.title}</Animated.Text>
+                        </TouchableOpacity>
+                    );
+                })}
+            </View>
+        );
+    };
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -90,36 +102,27 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
     },
     text: {
-        fontSize: 30
+        fontSize: 20,
+        color: "#fff"
     },
-    menu: {
-        width: 170,
-        backgroundColor: Colors.MEDIUM_BLUE,
+    textSelected: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: "#fff"
     },
-    buttonMenu: {
-        borderRadius: 0,
-        padding: 10,
-        backgroundColor: Colors.MEDIUM_BLUE,
-        borderLeftWidth: 3,
-        borderColor: Colors.MEDIUM_BLUE,
+    tabBar: {
+        flexDirection: 'row',
     },
-    buttonMenuText: {
-        color: Colors.WHITE,
-        textAlign: 'left',
-        width: '100%'
-    },
-    buttonMenuSelected: {
-        backgroundColor: Colors.DARK_BLUE,
-        borderLeftWidth: 3,
-        borderColor: Colors.LIGHT_BLUE
-    },
-    buttonMenuSelectedText: {
-        color: Colors.WHITE,
-        textAlign: 'left',
-        width: '100%',
-    },
-    statistiques: {
+    tabItem: {
         flex: 1,
-        padding: 15,
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: Colors.MEDIUM_BLUE
+    },
+    tabItemSelected: {
+        flex: 1,
+        alignItems: 'center',
+        padding: 16,
+        backgroundColor: Colors.DARK_BLUE,
     }
 });

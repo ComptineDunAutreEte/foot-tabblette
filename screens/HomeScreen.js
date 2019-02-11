@@ -4,9 +4,7 @@ import BaseScreen from "./BaseScreen";
 import { getSocket, reset, waitingScreen } from "../services/WebsocketService";
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from 'react-native-elements';
-import { send, setNavigation } from "../services/WebsocketService";
-import { categories } from "../model/categories";
-import { levels } from "../model/levels";
+import { send } from "../services/WebsocketService";
 import HeaderComponent from "../components/HeaderComponent";
 import Text from "react-native-elements/src/text/Text";
 import Colors from "../constants/Colors";
@@ -31,7 +29,6 @@ export class HomeScreen extends BaseScreen {
 
         waitingScreen((response) => {
             if (response.isReady === true) {
-                console.log("ready");
                 navigate("Wait");
             }
 

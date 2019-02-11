@@ -1,14 +1,14 @@
 export const menuFields = [
     {
         key: 'perso',
-        label: 'Personnelles'
+        title: 'Personnelles'
     },
     {
         key: 'team',
-        label: 'En équipe'
+        title: 'En équipe'
     },
     {
         key: 'general',
-        label: 'Générales'
+        title: 'Générales'
     },
 ];

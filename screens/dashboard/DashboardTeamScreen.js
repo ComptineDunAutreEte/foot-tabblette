@@ -66,15 +66,13 @@ export default class DashboardTeamScreen extends React.Component {
             })
         });
 
-
-        this.chartWidth = this.bTimes.length > 20 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width - 200;
+        this.chartWidth = this.bTimes.length > 20 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width;
     }
 
     render() {
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.stats}>
-                    <MainTitle title={"Statistiques de votre équipe"}/>
                     <View style={styles.infosTop}>
                         <View style={styles.bloc1}>
                             <Text style={{
@@ -82,7 +80,7 @@ export default class DashboardTeamScreen extends React.Component {
                                 textAlign: "center",
                                 marginBottom: 10,
                                 fontWeight: "bold"
-                            }}>Score : {this.aTeamTotalScore} / {this.aTeamTotalScoreGraph.length - 1}</Text>
+                            }}>Score : {this.aTeamTotalScore}</Text>
                             <Text style={{textAlign: "center"}}>Votre team</Text>
                         </View>
 
@@ -91,7 +89,7 @@ export default class DashboardTeamScreen extends React.Component {
                                 fontSize: 30,
                                 textAlign: "center",
                                 marginBottom: 10,
-                            }}>Score : {this.bTeamTotalScore} / {this.bTeamTotalScoreGraph.length - 1}</Text>
+                            }}>Score : {this.bTeamTotalScore}</Text>
                             <Text style={{textAlign: "center"}}>Team adverse</Text>
                         </View>
 
@@ -178,6 +176,8 @@ export default class DashboardTeamScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 20,
+        backgroundColor: "#f9f9f9"
     },
     stats: {
         flex: 1,

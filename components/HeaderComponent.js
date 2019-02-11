@@ -81,7 +81,7 @@ class HeaderComponent extends React.Component {
                     <View style={{flexDirection: 'row'}}>
                         <View style={{flex: 1}}>
                             <Text style={styles.headerModalTitle}>
-                                Niveau : {playerLevel} en foot
+                                Statistiques
                             </Text>
                         </View>
                         <View style={{alignItems: "center", marginRight: 20, marginTop: 10}}>

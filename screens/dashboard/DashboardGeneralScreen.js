@@ -6,7 +6,6 @@ export default class DashboardGeneralScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <MainTitle title={"Statistiques générales"}/>
                 <Text>Perso</Text>
             </View>
         )
@@ -17,5 +16,7 @@ export default class DashboardGeneralScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 20,
+        backgroundColor: "#f9f9f9"
     }
 });
