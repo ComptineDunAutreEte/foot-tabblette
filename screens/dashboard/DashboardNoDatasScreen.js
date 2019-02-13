@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Text from "react-native-elements/src/text/Text";
 import MainTitle from "../../components/title/MainTitleComponent";
 
-export class DashboardNoDatasScreen extends React.Component {
+export default class DashboardNoDatasScreen extends React.Component {
 
     render() {
         return (

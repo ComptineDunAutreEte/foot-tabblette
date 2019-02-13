@@ -8,7 +8,8 @@ import DashboardTeamScreen from "./dashboard/DashboardTeamScreen";
 import DashboardGeneralScreen from "./dashboard/DashboardGeneralScreen";
 import { dashboardDataRequest, send } from "../services/WebsocketService";
 import { TabView, SceneMap } from 'react-native-tab-view';
-import { DashboardNoDatasScreen } from "./dashboard/DashboardNoDatasScreen";
+import DashboardNoDatasScreen from "./dashboard/DashboardNoDatasScreen";
+import DashboardHistoryScreen from "./dashboard/DashboardHistoryScreen";
 
 export default class DashboardScreen extends BaseScreen {
 
@@ -16,7 +17,7 @@ export default class DashboardScreen extends BaseScreen {
         super(props);
 
         this.state = {
-            selectedStats: 'team',
+            selectedStats: 'history',
             dashboardDatas: null,
             index: 0,
             routes: menuFields
@@ -30,21 +31,19 @@ export default class DashboardScreen extends BaseScreen {
     }
 
     render() {
-
         if (this.state.dashboardDatas === null) {
-            console.log("null");
             return (
                 <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
                     <ActivityIndicator size="large" color="#0000ff"/>
                 </View>
             );
         } else {
-            console.log("not null");
             return (
 
                 <TabView
                     navigationState={this.state}
                     renderScene={SceneMap({
+                        history: this.state.dashboardDatas.history.length === 0 ? this.emptyDatasScreen : this.historyScreen,
                         perso: this.state.dashboardDatas.perso.userResponses.length === 0 ? this.emptyDatasScreen : this.persoScreen,
                         team: this.teamScreen,
                         general: this.generalScreen,
@@ -58,6 +57,10 @@ export default class DashboardScreen extends BaseScreen {
             );
         }
     }
+
+    historyScreen = () => (
+        <DashboardHistoryScreen history={this.state.dashboardDatas.history} />
+    );
 
     persoScreen = () => (
         <DashboardPersoScreen persoDatas={this.state.dashboardDatas.perso}/>

@@ -16,9 +16,7 @@ export default class DashboardTeamScreen extends React.Component {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
         };
-
-        console.log("teamDatas", this.props.teamDatas);
-
+        
         this.aResponses = this.props.teamDatas.aResponses;
         this.bResponses = this.props.teamDatas.bResponses;
 

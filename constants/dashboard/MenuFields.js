@@ -1,5 +1,9 @@
 export const menuFields = [
     {
+        key: "history",
+        title: "Historique"
+    },
+    {
         key: 'perso',
         title: 'Personnelles'
     },
