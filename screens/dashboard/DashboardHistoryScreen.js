@@ -15,6 +15,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons/faQuestion";
 import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
+import MainTitle from "../../components/title/MainTitleComponent";
+import { Tooltip } from 'react-native-elements';
+import SubTitleComponent from "../../components/title/SubTitleComponent";
 
 export default class DashboardHistoryScreen extends React.Component {
 
@@ -31,11 +34,27 @@ export default class DashboardHistoryScreen extends React.Component {
     }
 
     render() {
-        const { multipleSelect, activeSections } = this.state;
+        const {multipleSelect, activeSections} = this.state;
 
         return (
             <View style={styles.container}>
-                <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingTop: 30 }}>
+                <ScrollView style={styles.scrollView} contentContainerStyle={{}}>
+
+                    <View style={{flexDirection: "row"}}>
+                        <View style={{flex: 1}}>
+                            <MainTitle title={"Historique des questions"}/>
+                        </View>
+                        <View>
+                            <Tooltip width={300} height={200} popover={this.renderLegend()} backgroundColor={"white"} containerStyle={{
+                                borderColor: '#eee',
+                                borderWidth: 1,
+                                borderRadius: 5
+                            }}>
+                                <SubTitleComponent title={"Légende"}/>
+                            </Tooltip>
+                        </View>
+                    </View>
+
                     <Accordion
                         activeSections={activeSections}
                         sections={this.sections}
@@ -51,6 +70,21 @@ export default class DashboardHistoryScreen extends React.Component {
         );
     }
 
+    renderLegend() {
+        return (
+            <View>
+                <View style={{flexDirection: 'row'}}><FontAwesomeIcon icon={faCheck} style={{color: "#43a047"}} size={20}/><Text style={{fontSize: 16}}> Vous avez répondu juste</Text></View>
+                <View style={{flexDirection: 'row'}}><FontAwesomeIcon icon={faTimes} style={{color: "#e64a19"}} size={20}/><Text style={{fontSize: 16}}> Vous avez répondu faux</Text></View>
+                <View style={{flexDirection: 'row'}}><FontAwesomeIcon icon={faQuestion} style={{color: "#e64a19"}} size={20}/><Text style={{fontSize: 16}}> Vous n'avez pas répondu</Text></View>
+                <Text style={{fontWeight: "bold", fontSize: 16}}>Gras : Votre réponse</Text>
+                <Text style={{color: "#43a047", fontSize: 16}}>Vert : Bonne réponse</Text>
+                <Text style={{color: "#e64a19", fontSize: 16}}>Rouge : Mauvaise réponse</Text>
+            </View>
+
+        );
+    }
+
+
     setSections = sections => {
         this.setState({
             activeSections: sections.includes(undefined) ? [] : sections,
@@ -58,14 +92,13 @@ export default class DashboardHistoryScreen extends React.Component {
     };
 
     renderHeader = (section, _, isActive) => {
-
         return (
             <Animatable.View
                 duration={400}
                 style={[styles.header, isActive ? styles.activeHeader : styles.inactiveHeader]}
                 transition="backgroundColor"
             >
-                { this.displayIcon(section) }
+                {this.displayIcon(section)}
                 <Text style={styles.headerText}>Question {section.questionNumber} : {section.question}</Text>
             </Animatable.View>
         );
@@ -73,12 +106,12 @@ export default class DashboardHistoryScreen extends React.Component {
 
     displayIcon(section) {
         if (section.userResponseId === null) {
-            return (<FontAwesomeIcon icon={faQuestion} style={{color: "#e64a19"}} size={20} />);
+            return (<FontAwesomeIcon icon={faQuestion} style={{color: "#e64a19"}} size={20}/>);
         } else {
             if (section.isGoodResponse) {
-                return (<FontAwesomeIcon icon={faCheck} style={{color: "#43a047"}} size={20} />);
+                return (<FontAwesomeIcon icon={faCheck} style={{color: "#43a047"}} size={20}/>);
             } else {
-                return (<FontAwesomeIcon icon={faTimes} style={{color: "#e64a19"}} size={20} />);
+                return (<FontAwesomeIcon icon={faTimes} style={{color: "#e64a19"}} size={20}/>);
             }
         }
     }
@@ -90,22 +123,37 @@ export default class DashboardHistoryScreen extends React.Component {
                 style={[styles.content, isActive ? styles.activeContent : styles.inactiveContent]}
                 transition="backgroundColor"
             >
-                {
-                    section.responses.map((response) => {
-                        return (
-                            <Animatable.Text animation={isActive ? 'ease-in-out' : undefined}>
-                                <Text style={[
-                                    {fontSize: 14},
-                                    response.isValid ?
-                                        (section.userResponseId === response.id ? {color: "green", fontWeight: "bold"} : {color: "green", fontWeight: "normal"}) :
-                                        (section.userResponseId === response.id ? {color: "red", fontWeight: "bold"} : {color: "black", fontWeight: "normal"})
-                                ]}>{response.response}</Text>
-                            </Animatable.Text>
+                <View style={{flex: 1, flexGrow: 1}}>
+                    {
+                        section.responses.map((response) => {
+                            return (
+                                <Animatable.Text animation={isActive ? 'ease-in-out' : undefined}>
+                                    <Text style={[
+                                        {fontSize: 16},
+                                        response.isValid ?
+                                            (section.userResponseId === response.id ? {
+                                                color: "green",
+                                                fontWeight: "bold"
+                                            } : {color: "green", fontWeight: "normal"}) :
+                                            (section.userResponseId === response.id ? {
+                                                color: "red",
+                                                fontWeight: "bold"
+                                            } : {color: "black", fontWeight: "normal"})
+                                    ]}>{response.response}</Text>
+                                </Animatable.Text>
 
 
-                        )
-                    })
-                }
+                            )
+                        })
+                    }
+                </View>
+
+                <View style={{flex: 1, flexGrow: 1}}>
+                    <Text style={{fontSize: 16, fontWeight: "bold"}}>Anecdote : </Text>
+                    <Text style={{fontSize: 16}}>
+                        {section.anecdote}
+                    </Text>
+                </View>
             </Animatable.View>
         );
     }
@@ -131,11 +179,12 @@ const styles = StyleSheet.create({
     },
     headerText: {
         paddingLeft: 10,
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         flex: 1
     },
     content: {
+        flexDirection: 'row',
         padding: 20,
         backgroundColor: '#fff',
     },
@@ -144,7 +193,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderColor: '#eee',
         borderWidth: 1,
-        padding: 15,
+        padding: 20,
         borderRadius: 5
     },
     activeHeader: {
@@ -162,9 +211,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "#ddd"
     },
-    inactiveContent: {
-
-    },
+    inactiveContent: {},
 
     validResponse: {
         color: "green",

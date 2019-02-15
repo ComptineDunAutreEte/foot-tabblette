@@ -42,7 +42,7 @@ export default class QuestionScreen extends BaseScreen {
         this.interval = setInterval(() => {
             virtualTimer--;
             const barPercentage = virtualTimer * 100 / virtualMaxTimer;
-            const realTimer = Math.ceil(virtualTimer / intervalRatio);
+            const realTimer = Math.round(virtualTimer / intervalRatio * 10) / 10;
             this.setState({timer: realTimer});
             this.setState({percentage: barPercentage});
         }, intervalTimer);
@@ -103,6 +103,7 @@ export default class QuestionScreen extends BaseScreen {
                                 onPress={() => {
                                     clearInterval(this.interval);
                                     this.setState({isQuestionSent: true});
+                                    console.log(userDatas);
                                     this.sendResponse(userDatas);
                                 }}/>
                     </View>
