@@ -38,7 +38,7 @@ export class ResponseSimpleQuestionScreen extends BaseScreen {
 
         setTimeout(() => {
             this.props.navigation.navigate("Home");
-        }, 5000);
+        }, 4000);
 
         return (
             <View style={styles.container}>
