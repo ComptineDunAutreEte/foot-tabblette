@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import {Animated, TextInput, Button, PanResponder, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {Image,ImageBackground, Animated, TextInput, Button, PanResponder, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import {getSocket} from "../services/WebsocketService";
+import {images} from "../model/images"
 var SQUARE_DIMENSIONS = 100;
+import { Dimensions } from 'react-native'
 import uid from 'uuid/v4';
 
 
@@ -14,9 +16,12 @@ export class QuestionCollectifParrallel extends Component {
             color: '#03a9f4',
             size:100,
             text:'',
-            type:'Player'
+            type:'Player',
+            image:'PBlanc',
+            txt:''
         };
 
+        //alert(Dimensions.get('window').width+' '+Dimensions.get('window').height);
 
         //pan: new Animated.ValueXY()
         this._panResponder = PanResponder.create({
@@ -74,6 +79,11 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
         newPlayer.size = player.size;
         newPlayer.uuid = player.uuid;
         newPlayer.type=  player.type;
+        newPlayer.name=  player.name;
+        newPlayer.image =  player.image;
+        newPlayer.style =  player.style;
+        newPlayer.image =  player.image;
+        console.log(newPlayer);
         return newPlayer;
     }
 
@@ -83,6 +93,7 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
         for(let player of this.state.players){
             if(player.move){
                 let newPlayer = this.createObject(player);
+                player.
                 players.push(newPlayer);
             }
         }
@@ -94,8 +105,16 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
         let player = {};
         player.x = x;
         player.y = y;
-        player.name = "";
+        player.image = this.state.image;
+        player.name = this.state.txt;
         player.type = this.state.type;
+        if(player.type === 'Player'){
+            player.style = {width:100, height:100}
+        }else{
+            player.style = {width:30, height:30}
+        }
+
+
         player.move = false;
         player.size = this.state.size;
         player.color = this.state.color;
@@ -132,6 +151,7 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
         //alert(JSON.stringify(player));
        // this.forceUpdate();
        /// alert(this.state.players);*/
+        this.setState({txt:''});
         this.addPlayer(player);
     }
 
@@ -177,7 +197,7 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: xy.color,
+                /*backgroundColor: xy.color,*/
                 borderRadius: 100,
                 width: xy.size,
                 height: xy.size,
@@ -199,14 +219,24 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
         return xy._animatedValueX+' '+xy._animatedValueY;
     }
 
+    getImageStyle(xy){
+        if(xy.type === 'Player'){
+            return {width:100, height:100}
+        }
+        return {width:30, height:30}
+    }
     getCircle() {
         let circles = [];
         let i = 1;
         for (let xy of this.state.players) {
-            //console.log(xy);
+            console.log(xy.image);
             circles.push(
                 <Animated.View key={i+'c'} style={[this.getColor(xy), xy.pan.getLayout()]} {...xy._panResponder.panHandlers}>
-<Text>{this.getText(xy)}</Text>
+                    <Image
+                        style={this.getImageStyle(xy)}
+                        source={images[xy.image].uri}
+                    />
+                    <Text style={{color:"blue"}}>{xy.name}</Text>
                 </Animated.View>);
             i++;
         }
@@ -231,16 +261,21 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
         return (
             <View style={{flex: 1, flexDirection: 'row'}}>
                 <View key={'10'} style={styles.right}>
-                    <Button title="Blue" key={'1'} onPress={() => this.setState({color: '#03a9f4'})}> </Button>
+                    <TextInput
+                        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+                        onChangeText={(txt) => this.setState({txt})}
+                        value={this.state.txt}
+                    />
+                    <Button title="PBlanc" key={'1'} onPress={() => this.setState({image: 'PBlanc'})}> </Button>
 
-                    <Button key={'2'} onPress={() => this.setState({color: '#ff5722'})} title="Red" > </Button>
+                    <Button key={'2'} onPress={() => this.setState({image: 'PBleu'})} title="PBleu" > </Button>
 
-                    <Button key={'6'} onPress={() => this.setState({color: 'white'})} title="white" ></Button>
+                    <Button key={'6'} onPress={() => this.setState({image: 'PBleuFoot'})} title="PTire" ></Button>
                     <Button key={'4'} onPress={() => this.setState({size:100})} title="100" > </Button>
 
                     <Button key={'5'} onPress={() => this.setState({size:50})} title="50" > </Button>
 
-                    <Button key={'8'} onPress={() => this.setState({type:'Ball'})} title="Ball" > </Button>
+                    <Button key={'8'} onPress={() => {this.setState({type:'Ball'}); this.setState({image:'Ball'})}} title="Ball" > </Button>
                     <Button key={'9'} onPress={() => this.setState({type:'Player'})} title="Player" > </Button>
                     <Button key={'3'} onPress={() => this.moveToAll()} title="MoveTo" > </Button>
 
@@ -257,9 +292,9 @@ this.createPans(xy.x-this.state.size/2, xy.y-this.state.size/2);
                     />
 
                 </View>
-                <View key={'15'} style={styles.left} {...this._panResponder.panHandlers}>
+                <ImageBackground key={'15'} imageStyle={{resizeMode:'stretch'}} style={styles.left} source={images.terrain.uri} {...this._panResponder.panHandlers}>
                     {this.getCircle()}
-                </View>
+                </ImageBackground>
             </View>
         );
     }

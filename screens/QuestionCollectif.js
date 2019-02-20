@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View, StatusBar} from 'react-native';
 import {getSocket, send} from "../services/WebsocketService";
 import Dialog from "react-native-dialog";
 import Overlay from 'react-native-modal-overlay';
-
 const answer_template = {
     team: "Team_A",
     pseudo: "Alex",
@@ -133,6 +132,7 @@ export class QuestionCollectif extends Component {
     }
 
     render() {
+        <StatusBar hidden />
         return (
             <View style={{flex: 1, flexDirection: 'row'}}>
                 <Overlay visible={this.state.modalVisible}

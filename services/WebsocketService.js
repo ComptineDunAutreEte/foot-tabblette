@@ -14,8 +14,11 @@ import { User } from "../model/user";
  // const socket = openSocket('http://10.212.106.107:4000/');
 
 // const socket = openSocket('http://eeriel.fr:4000/');
-//const socket = openSocket('http://localhost:4000/');
-const socket = openSocket('https://server-app-tablet.herokuapp.com/');
+
+const socket = openSocket('http://localhost:4000/');
+
+
+// const socket = openSocket('https://server-app-tablet.herokuapp.com/');
 
 const user = new User();
 user.uuid = uid();
@@ -37,6 +40,7 @@ function setNavigation(_navigation) {
 }
 
 function send(chanel, _data){
+    console.log('send: ', chanel);
     let message = {
         uuid: user.uuid,
         team: user.team,

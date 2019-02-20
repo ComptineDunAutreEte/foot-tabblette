@@ -55,8 +55,8 @@ export class HomeScreen extends BaseScreen {
                     title='Question collectif v2'
                     iconRight
                     onPress={() => {
-                        send('question-collectif-request-v2', 'request');
-                        //navigate('QuestionCollectifV2');
+                        //send('question-collectif-request-v2', 'request');
+                        navigate('QuestionCollectifV2');
                     }}
                 />
 
