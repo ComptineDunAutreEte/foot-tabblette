@@ -7,8 +7,6 @@ import {
 import SubTitleComponent from "../../components/title/SubTitleComponent";
 import CategoryDetailComponent from "../../components/dashboard/CategoryDetailComponent";
 import { categories } from "../../model/categories";
-import MainTitle from "../../components/title/MainTitleComponent";
-import { UserResponseInformationsService } from "../../services/UserResponseInformationsService";
 import { responseLevels } from "../../model/response-levels";
 
 export default class DashboardPersoScreen extends React.Component {
@@ -16,16 +14,13 @@ export default class DashboardPersoScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        userResponsesService = new UserResponseInformationsService();
-        const userResponses = userResponsesService.createResponses();
-        const generalResponses = userResponsesService.createResponses(userResponses.length);
+        const persoDatas = this.props.persoDatas;
 
-        console.log("userresponses", userResponses.length)
-        console.log("generalResponses", generalResponses.length)
+        const userResponses = persoDatas.userResponses;
+        const generalResponses = persoDatas.generalResponses;
 
         this.userDatas = this.retrieveResponses(userResponses);
         this.generalDatas = this.retrieveResponses(generalResponses);
-
 
         this.goodResponsesByCategories = [[], []];
 
@@ -69,7 +64,7 @@ export default class DashboardPersoScreen extends React.Component {
         this.responsesLevels = this.getUserLevel(this.goodResponsesPercentage);
         this.userLevel = this.responsesLevels.level;
         this.userColorLevel = this.responsesLevels.color;
-        this.chartWidth = this.generalDatas.length > 20 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width - 200;
+        this.chartWidth = this.generalDatas.length > 20 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width;
 
         generalResponses.forEach((generalResponse) => {
             const cat = this.goodResponsesByCategories[1].find((c) => c.category === generalResponse.category);
@@ -142,8 +137,6 @@ export default class DashboardPersoScreen extends React.Component {
         return (
             <View style={styles.container}>
                 <ScrollView style={styles.stats}>
-
-                    <MainTitle title={"Vos statistiques personnelles"}/>
 
                     <View style={styles.infosTop}>
                         <View style={styles.bloc1}>
@@ -228,44 +221,45 @@ export default class DashboardPersoScreen extends React.Component {
                         </View>
                         <View style={styles.rightBottom}>
                             <SubTitleComponent title={"Pourcentage de bonnes réponses"}/>
-                            <VictoryChart polar width={400} height={460} theme={VictoryTheme.material}>
+                            <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                                <VictoryChart polar width={400} height={460} theme={VictoryTheme.material}>
 
-                                <VictoryLegend
-                                    x={10} y={0}
-                                    centerTitle
-                                    orientation="horizontal"
-                                    gutter={20}
-                                    style={{border: {stroke: "#eee"}, title: {fontSize: 20}}}
-                                    data={[
-                                        {name: "Personnel", symbol: {fill: "tomato"}},
-                                        {name: "Moyenne des autres utilisateurs", symbol: {fill: "gold"}}
-                                    ]}
-                                />
+                                    <VictoryLegend
+                                        x={10} y={0}
+                                        centerTitle
+                                        orientation="horizontal"
+                                        gutter={20}
+                                        style={{border: {stroke: "#eee"}, title: {fontSize: 20}}}
+                                        data={[
+                                            {name: "Personnel", symbol: {fill: "tomato"}},
+                                            {name: "Moyenne des autres utilisateurs", symbol: {fill: "gold"}}
+                                        ]}
+                                    />
 
-                                <VictoryGroup colorScale={["tomato", "gold"]}
-                                              style={{data: {fillOpacity: 0.2, strokeWidth: 2}}}>
-                                    {this.state.data.map((data, i) => {
-                                        return <VictoryArea key={i} data={data}/>;
-                                    })}
-                                </VictoryGroup>
-
-                                {
-                                    Object.keys(this.state.maxima).map((key, i) => {
-                                        return (
-                                            <VictoryPolarAxis
-                                                key={i} dependentAxis style={axisStyle}
-                                                tickLabelComponent={
-                                                    <VictoryLabel labelPlacement="vertical"/>
-                                                }
-                                                labelPlacement="perpendicular"
-                                                axisValue={i + 1} label={key}
-                                                tickFormat={(t) => Math.ceil(t * this.state.maxima[key])}
-                                                tickValues={[0.25, 0.5, 0.75, 1]}
-                                            />
-                                        );
-                                    })
-                                }
-                            </VictoryChart>
+                                    <VictoryGroup colorScale={["tomato", "gold"]}
+                                                  style={{data: {fillOpacity: 0.2, strokeWidth: 2}}}>
+                                        {this.state.data.map((data, i) => {
+                                            return <VictoryArea key={i} data={data}/>;
+                                        })}
+                                    </VictoryGroup>
+                                    {
+                                        Object.keys(this.state.maxima).map((key, i) => {
+                                            return (
+                                                <VictoryPolarAxis
+                                                    key={i} dependentAxis style={axisStyle}
+                                                    tickLabelComponent={
+                                                        <VictoryLabel labelPlacement="vertical"/>
+                                                    }
+                                                    labelPlacement="perpendicular"
+                                                    axisValue={i + 1} label={key}
+                                                    tickFormat={(t) => Math.ceil(t * this.state.maxima[key])}
+                                                    tickValues={[0.25, 0.5, 0.75, 1]}
+                                                />
+                                            );
+                                        })
+                                    }
+                                </VictoryChart>
+                            </View>
                         </View>
                     </View>
                 </ScrollView>
@@ -298,6 +292,8 @@ export default class DashboardPersoScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 20,
+        backgroundColor: "#f9f9f9"
     },
     stats: {
         flex: 1,
@@ -337,8 +333,7 @@ const styles = StyleSheet.create({
     },
     responseTime: {
         backgroundColor: '#fff',
-        padding: 10,
-        paddingRight: -20,
+        padding: 20,
         borderColor: '#eee',
         borderWidth: 1,
         marginBottom: 20,
@@ -349,7 +344,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderColor: '#eee',
         borderWidth: 1,
-        padding: 10,
+        padding: 20,
         marginRight: 10,
         borderRadius: 5,
     },
@@ -358,7 +353,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderColor: '#eee',
         borderWidth: 1,
-        padding: 10,
+        padding: 20,
+        paddingBottom: -30,
         marginLeft: 10,
         borderRadius: 5,
     },

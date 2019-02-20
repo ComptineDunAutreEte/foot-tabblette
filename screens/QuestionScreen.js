@@ -42,7 +42,7 @@ export default class QuestionScreen extends BaseScreen {
         this.interval = setInterval(() => {
             virtualTimer--;
             const barPercentage = virtualTimer * 100 / virtualMaxTimer;
-            const realTimer = Math.ceil(virtualTimer / intervalRatio);
+            const realTimer = Math.round(virtualTimer / intervalRatio * 10) / 10;
             this.setState({timer: realTimer});
             this.setState({percentage: barPercentage});
         }, intervalTimer);
@@ -62,7 +62,7 @@ export default class QuestionScreen extends BaseScreen {
             userResponseTime: this.maxTimer - this.state.timer
         };
 
-        if (this.state.timer === 0 || this.state.isQuestionSent === true) {
+        if (this.state.timer === 0 && this.state.isQuestionSent === false) {
             clearInterval(this.interval);
             this.sendResponse(userDatas)
         }
@@ -101,7 +101,9 @@ export default class QuestionScreen extends BaseScreen {
                                 disabled={this.state.selectedResponse === null || this.state.isQuestionSent === true}
                                 title={"Valider votre réponse"}
                                 onPress={() => {
+                                    clearInterval(this.interval);
                                     this.setState({isQuestionSent: true});
+                                    console.log(userDatas);
                                     this.sendResponse(userDatas);
                                 }}/>
                     </View>
@@ -127,6 +129,7 @@ export default class QuestionScreen extends BaseScreen {
     }
 
     sendResponse(data) {
+        console.log("ask simple question");
         send("ask-simple-question", data);
 
         getSimpleQuestionResponse((response) => {

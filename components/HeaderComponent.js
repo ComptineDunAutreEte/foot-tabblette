@@ -6,6 +6,7 @@ import { Button } from 'react-native-elements';
 import DashboardScreen from "../screens/DashboardScreen";
 import GameService from "../services/GameService";
 import SimpleAsyncStorageService from "../services/SimpleAsyncStorageService";
+import { dashboardDataRequest, send } from "../services/WebsocketService";
 
 class HeaderComponent extends React.Component {
 
@@ -54,7 +55,6 @@ class HeaderComponent extends React.Component {
     render() {
         const {pseudo, playerLevel} = this.state;
 
-
         return (
             <View style={styles.header}>
                 <View style={{flexGrow: 1}}>
@@ -81,7 +81,7 @@ class HeaderComponent extends React.Component {
                     <View style={{flexDirection: 'row'}}>
                         <View style={{flex: 1}}>
                             <Text style={styles.headerModalTitle}>
-                                Niveau : {playerLevel} en foot
+                                Statistiques
                             </Text>
                         </View>
                         <View style={{alignItems: "center", marginRight: 20, marginTop: 10}}>
