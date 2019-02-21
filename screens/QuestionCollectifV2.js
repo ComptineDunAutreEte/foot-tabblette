@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {Animated, Dimensions, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {getSocket, send} from "../services/WebsocketService";
+import {getSocket, getUser, send} from "../services/WebsocketService";
 import {ProgressDialog} from 'react-native-simple-dialogs';
 import {images} from "../model/images";
 import Colors from "../constants/Colors";
 import Overlay from 'react-native-modal-overlay';
+
 export class QuestionCollectifV2 extends Component {
     static navigationOptions = {
         header: null,
@@ -31,7 +32,9 @@ export class QuestionCollectifV2 extends Component {
             more_answer: null,
             lost: false,
             message: '',
-            modalVisible:true
+            modalVisible: true,
+            see_table: false,
+            result: ''
         };
 
         //send('ready-par','');
@@ -87,7 +90,8 @@ export class QuestionCollectifV2 extends Component {
 
         getSocket().on('lost', (message) => {
             console.log('lost', message);
-            setTimeout(() => {this.setState({modalVisible: true});
+            setTimeout(() => {
+                this.setState({see_table: true});
                 this.setState({answered: 'end'});
                 this.setState({message: message.data});
                 this.setState({lost: true});
@@ -110,6 +114,17 @@ export class QuestionCollectifV2 extends Component {
         getSocket().on('all-answered', (message) => {
             console.log('all-answered', message);
             this.setState({progressVisible: false});
+            this.setState({see_table: true});
+            //afficher ecran regarde la table.
+        });
+
+        getSocket().on('result', (message) => {
+            console.log('result==',message.data,'uuid', getUser().uuid);
+            this.setState({modalVisible: true});
+            let result = message.data.getUser().uuid;
+            if(result){
+                this.setState({result:result});
+            }
             //afficher ecran regarde la table.
         });
         //StatusBar.setHidden(true);
@@ -248,16 +263,16 @@ export class QuestionCollectifV2 extends Component {
     getView() {
         let index = 1;
         if (this.state.answered === 'end') {
-            if(this.state.lost){
+            if (this.state.lost) {
                 return <Text style={styles.text}>{this.state.message}</Text>
-            }else{
+            } else {
                 return <Text style={styles.text}>Vous avez repondu: {'\n' + this.state.reponse}</Text>
             }
         } else if (this.state.answered === 'play') {
             let views = [];
-            for(let item of this.state.reponses){
+            for (let item of this.state.reponses) {
                 views.push(<TouchableOpacity
-                    key={'key'+index}
+                    key={'key' + index}
                     style={styles.container}
                     onPress={() => {
                         this.setState({answered: 'end'});
@@ -270,16 +285,17 @@ export class QuestionCollectifV2 extends Component {
                 </TouchableOpacity>);
                 index++;
             }
-            if(this.state.more_answer !== null){
+            if (this.state.more_answer !== null) {
                 views.push(<TouchableOpacity
-                    key={'key'+index}
+                    key={'key' + index}
                     style={styles.container}
                     onPress={() => {
                         this.setState({answered: 'end'});
                         this.setState({reponse: this.state.more_answer.reponse});
                         send('answered', this.state.more_answer);
                     }}>
-                    <Text adjustsFontSizeToFit={true} style={styles.text}> <Text style={{fontWeight: 'bold'}}>Nouvelle réponse: </Text>{'\n'+this.state.more_answer.reponse}</Text>
+                    <Text adjustsFontSizeToFit={true} style={styles.text}> <Text style={{fontWeight: 'bold'}}>Nouvelle
+                        réponse: </Text>{'\n' + this.state.more_answer.reponse}</Text>
                 </TouchableOpacity>)
             }
 
@@ -289,8 +305,17 @@ export class QuestionCollectifV2 extends Component {
         }
     }
 
+    getContent(){
+        if(this.state.see_table){
+            return this.state.result;
+        }else{
+            return "Regardez la vidéo sur la table.";
+        }             
+
+    }
+
     getModalView() {
-        return <Text style={{fontSize:100}}>Regardez la table!</Text>;
+        return <Text style={{fontSize: 80, flexWrap: 'wrap'}}>{this.getContent()}</Text>;
     }
 
     render() {
@@ -320,6 +345,13 @@ export class QuestionCollectifV2 extends Component {
                             this.getView()
                         }
                     </View>
+                    {
+                        this.state.see_table?
+                        <View style={styles.blocQuestionBot}>
+                            <Text style={{fontSize:40}}>Regardez la suite de la vidéo sur la table</Text>
+                        </View> : <View/>
+                    }
+
 
                 </View>
                 <ImageBackground imageStyle={{resizeMode: 'stretch'}} source={images.terrain3.uri} style={styles.left}>
@@ -334,9 +366,10 @@ const styles = StyleSheet.create({
     wait: {textAlign: "center", fontSize: 60},
     right: {flex: 1, backgroundColor: Colors.DARK_BLUE},
     left: {flex: 2, backgroundColor: 'skyblue'},
-    blocText: {flex: 2},
+    blocText: {flex: 3},
     text: {textAlign: "center", fontSize: 30, color: Colors.DARK_BLUE, backgroundColor: 'white', marginBottom: 5},
     text1: {textAlign: "center", fontSize: 30},
     blocQuestion: {flex: 1},
-    question: {textAlign: "center", fontSize: 40, backgroundColor: 'white', color: Colors.DARK_BLUE}
+    blocQuestionBot: {flex: 1, backgroundColor: 'white'},
+    question: {textAlign: "center", fontSize: 40, backgroundColor: 'white', color: Colors.DARK_BLUE, flexWrap: 'wrap'}
 });
