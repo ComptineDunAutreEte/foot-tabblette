@@ -40,16 +40,14 @@ export default class LoginScreen extends BaseScreen {
     }
 
     render() {
-        const buttons = ['Team A', 'Team B'];
+        const buttons = ['Rouge', 'Bleu'];
         const {selectedIndex, isEmptyPseudo, userLevel} = this.state;
         const {navigate} = this.props.navigation;
         getSocket().on('navigate', (url) => navigate(url.data));
         return (
             <View style={styles.topView}>
-
                 <ImageBackground
-                    resizeMode={'stretch'}
-
+                    resizeMode={'cover'}
                     style={{flex: 1, width: "100%", height: "100%"}}
                     source={require('../assets/bg_foot.jpg')}>
                     <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoidingView}>
@@ -59,12 +57,13 @@ export default class LoginScreen extends BaseScreen {
                             <MainTitle title={"Bienvenue sur FootBoard !"}/>
                             <Text style={{ marginBottom: 20, textAlign: "center"}}>Veuillez choisir une team et entrer votre pseudo.</Text>
 
-                            <SubTitleComponent title={"Team"} />
+                            <SubTitleComponent title={"Équipe"} />
                             <ButtonGroup
                                 onPress={this.updateIndex}
                                 selectedIndex={selectedIndex}
                                 buttons={buttons}
                                 containerStyle={{width: 330, height: 50, marginBottom: 20,}}
+                                selectedButtonStyle={{backgroundColor: Colors.DARK_GREEN}}
                             />
 
                             <SubTitleComponent title={"Votre niveau en foot"} />
@@ -75,6 +74,7 @@ export default class LoginScreen extends BaseScreen {
                                 selectedIndex={userLevel}
                                 buttons={userLevelsChoices}
                                 containerStyle={{width: 330, height: 50}}
+                                selectedButtonStyle={{backgroundColor: Colors.DARK_GREEN}}
                             />
                             <TextInput
                                 style={styles.loginInput}
@@ -92,6 +92,7 @@ export default class LoginScreen extends BaseScreen {
                             />
                             <Button
                                 buttonStyle={styles.buttonStyle}
+                                titleStyle={styles.buttonTextMenu}
                                 title='Se connecter'
                                 disabled={this.state.isEmptyPseudo === true}
                                 iconRight
@@ -117,9 +118,9 @@ export default class LoginScreen extends BaseScreen {
 
     connecte(infos) {
         getUser().pseudo = infos.pseudo;
-        getUser().team = infos.team.split(" ")[1];
+        getUser().team = infos.team;
         let obj = {
-            team: infos.team.split(" ")[1],
+            team: infos.team,
             pseudo: infos.pseudo,
             userLevel: infos.userLevel
         };
@@ -163,7 +164,6 @@ const styles = StyleSheet.create({
         borderColor: '#eee',
         borderRadius: 5,
         borderWidth:1,
-
     },
     inputView: {
         flex: 1,
@@ -172,10 +172,15 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     buttonStyle: {
-        padding: 15,
         borderRadius: 100,
-        height: 30,
+        height: 50,
         backgroundColor: Colors.DARK_GREEN
+    },
+    buttonTextMenu: {
+        fontWeight: "bold",
+        color: Colors.WHITE,
+        padding: 15,
+        fontSize: 18
     },
     loginInput: {
         marginTop: 15,

@@ -1,6 +1,6 @@
 import React from "react";
 import BaseScreen from "./BaseScreen";
-import { StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import HeaderComponent from "../components/HeaderComponent";
 import SubTitleComponent from "../components/title/SubTitleComponent";
 import MainTitle from "../components/title/MainTitleComponent";
@@ -24,6 +24,8 @@ export default class QuestionScreen extends BaseScreen {
         this.question = navigation.getParam('question');
         this.questionCounter = navigation.getParam('questionCounter');
         this.maxTimer = navigation.getParam('maxTimer');
+        this.history = navigation.getParam('history');
+        console.log(this.history);
 
         this.state = {
             selectedResponse: null,
@@ -69,61 +71,66 @@ export default class QuestionScreen extends BaseScreen {
 
         return (
             <View style={styles.container}>
-                <View style={styles.stats}>
-                    <SubTitleComponent title={"Statistiques de la partie"}/>
-                    <Text>Stats</Text>
-                </View>
-                <View style={styles.main}>
-                    <View style={{alignItems: 'center'}}>
-                        <MainTitle title={"Question " + this.questionCounter}/>
-                        <SubTitleComponent title={this.question.question}/>
+                <ImageBackground
+                    resizeMode={'cover'}
+                    style={{width: "100%", height: "100%", flexDirection: 'row', padding: 20}}
+                    source={require('../assets/bg_foot.jpg')}>
+                    <View style={styles.stats}>
+                        <SubTitleComponent title={"Statistiques de la partie"}/>
+                        <Text>Stats</Text>
                     </View>
-
-                    <View style={styles.blocResponse}>
-                        {
-                            this.question.responses.map((response) => {
-                                return (
-                                    <Button key={response.id}
-                                            buttonStyle={this.state.selectedResponse === response.id ? styles.buttonPressed : styles.buttonResponse}
-                                            onPress={() => {
-                                                this.setState({selectedResponse: response.id})
-                                            }}
-                                            title={response.response}
-                                            titleStyle={this.state.selectedResponse === response.id ? styles.buttonTextPressed : styles.buttonTextResponse}/>
-                                );
-                            })
-                        }
-                    </View>
-
-
-                    <View style={styles.blocValidate}>
-                        <Button buttonStyle={styles.buttonValidate}
-                                disabled={this.state.selectedResponse === null || this.state.isQuestionSent === true}
-                                title={"Valider votre réponse"}
-                                onPress={() => {
-                                    clearInterval(this.interval);
-                                    this.setState({isQuestionSent: true});
-                                    console.log(userDatas);
-                                    this.sendResponse(userDatas);
-                                }}/>
-                    </View>
-
-                    <View style={styles.timerBg}>
-                        <View style={{position: "absolute", zIndex: 11, padding: 10}}>
-                            <Text style={{color: "#fff", fontSize: 20}}>Temps restant : {this.state.timer}</Text>
+                    <View style={styles.main}>
+                        <View style={{alignItems: 'center'}}>
+                            <MainTitle title={"Question " + this.questionCounter}/>
+                            <SubTitleComponent title={this.question.question}/>
                         </View>
-                        <View style={{
-                            height: 38,
-                            position: "absolute",
-                            zIndex: 10,
-                            backgroundColor: Colors.DARK_GREEN,
-                            width: `${this.state.percentage}%`,
-                            borderRadius: 10,
-                        }}>
-                            <Text style={{color: Colors.DARK_GREEN}}>.</Text>
+
+                        <View style={styles.blocResponse}>
+                            {
+                                this.question.responses.map((response) => {
+                                    return (
+                                        <Button key={response.id}
+                                                buttonStyle={this.state.selectedResponse === response.id ? styles.buttonPressed : styles.buttonResponse}
+                                                onPress={() => {
+                                                    this.setState({selectedResponse: response.id})
+                                                }}
+                                                title={response.response}
+                                                titleStyle={this.state.selectedResponse === response.id ? styles.buttonTextPressed : styles.buttonTextResponse}/>
+                                    );
+                                })
+                            }
+                        </View>
+
+
+                        <View style={styles.blocValidate}>
+                            <Button buttonStyle={styles.buttonValidate}
+                                    disabled={this.state.selectedResponse === null || this.state.isQuestionSent === true}
+                                    title={"Valider votre réponse"}
+                                    onPress={() => {
+                                        clearInterval(this.interval);
+                                        this.setState({isQuestionSent: true});
+                                        console.log(userDatas);
+                                        this.sendResponse(userDatas);
+                                    }}/>
+                        </View>
+
+                        <View style={styles.timerBg}>
+                            <View style={{position: "absolute", zIndex: 11, padding: 10}}>
+                                <Text style={{color: "#fff", fontSize: 20}}>Temps restant : {this.state.timer}</Text>
+                            </View>
+                            <View style={{
+                                height: 38,
+                                position: "absolute",
+                                zIndex: 10,
+                                backgroundColor: Colors.DARK_GREEN,
+                                width: `${this.state.percentage}%`,
+                                borderRadius: 10,
+                            }}>
+                                <Text style={{color: Colors.DARK_GREEN}}>.</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
+                </ImageBackground>
             </View>
         );
     }
@@ -142,10 +149,10 @@ export default class QuestionScreen extends BaseScreen {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.DARK_GREEN,
-        padding: 15,
-        flexDirection: 'row',
         flex: 1,
+        backgroundColor: Colors.DARK_GREEN,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     stats: {
         width: 250,
