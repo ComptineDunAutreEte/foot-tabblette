@@ -36,9 +36,9 @@ export default class WaitScreen extends BaseScreen {
                             padding: 20,
                             borderRadius: 5,
                         }}
-                        title="C'est partit !"
+                        title="C'est parti !"
                         titleStyle={{
-                            color: Colors.DARK_BLUE,
+                            color: Colors.DARK_GREEN,
                             fontSize: 20
                         }}
 
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Colors.DARK_BLUE
+        backgroundColor: Colors.DARK_GREEN
     },
     instructions: {
         textAlign: 'center',

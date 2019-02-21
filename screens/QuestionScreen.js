@@ -116,11 +116,11 @@ export default class QuestionScreen extends BaseScreen {
                             height: 38,
                             position: "absolute",
                             zIndex: 10,
-                            backgroundColor: Colors.DARK_BLUE,
+                            backgroundColor: Colors.DARK_GREEN,
                             width: `${this.state.percentage}%`,
                             borderRadius: 10,
                         }}>
-                            <Text style={{color: Colors.DARK_BLUE}}>.</Text>
+                            <Text style={{color: Colors.DARK_GREEN}}>.</Text>
                         </View>
                     </View>
                 </View>
@@ -142,7 +142,7 @@ export default class QuestionScreen extends BaseScreen {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.DARK_BLUE,
+        backgroundColor: Colors.DARK_GREEN,
         padding: 15,
         flexDirection: 'row',
         flex: 1,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     },
     buttonResponse: {
         backgroundColor: Colors.WHITE,
-        borderColor: Colors.MEDIUM_BLUE,
+        borderColor: Colors.MEDIUM_GREEN,
         borderWidth: 1,
         paddingLeft: 20,
         paddingRight: 20,
@@ -186,13 +186,13 @@ const styles = StyleSheet.create({
         width: 250,
     },
     buttonTextResponse: {
-        color: Colors.DARK_BLUE,
+        color: Colors.DARK_GREEN,
         fontSize: 25,
     },
     buttonPressed: {
-        backgroundColor: Colors.MEDIUM_BLUE,
+        backgroundColor: Colors.MEDIUM_GREEN,
         paddingLeft: 20,
-        borderColor: Colors.MEDIUM_BLUE,
+        borderColor: Colors.MEDIUM_GREEN,
         borderWidth: 1,
         paddingRight: 20,
         paddingTop: 15,
@@ -219,9 +219,9 @@ const styles = StyleSheet.create({
         width: 400,
         marginLeft: 30,
         marginRight: 30,
-        backgroundColor: Colors.LIGHT_BLUE,
+        backgroundColor: Colors.LIGHT_GREEN,
         borderRadius: 10,
-        borderColor: Colors.DARK_BLUE,
+        borderColor: Colors.DARK_GREEN,
         borderWidth: 1,
         marginTop: 30,
         height: 40,

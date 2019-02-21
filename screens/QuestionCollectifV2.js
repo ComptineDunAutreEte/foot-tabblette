@@ -323,7 +323,7 @@ export class QuestionCollectifV2 extends Component {
         return (
             <View style={{flex: 1, flexDirection: 'row'}}>
                 <Overlay visible={this.state.modalVisible}
-                         animationType="zoomIn" containerStyle={{backgroundColor: Colors.DARK_BLUE}}
+                         animationType="zoomIn" containerStyle={{backgroundColor: Colors.DARK_GREEN}}
                          animationDuration={500}>
                     {this.getModalView()}
                 </Overlay>
@@ -364,12 +364,12 @@ export class QuestionCollectifV2 extends Component {
 
 const styles = StyleSheet.create({
     wait: {textAlign: "center", fontSize: 60},
-    right: {flex: 1, backgroundColor: Colors.DARK_BLUE},
+    right: {flex: 1, backgroundColor: Colors.DARK_GREEN},
     left: {flex: 2, backgroundColor: 'skyblue'},
     blocText: {flex: 3},
-    text: {textAlign: "center", fontSize: 30, color: Colors.DARK_BLUE, backgroundColor: 'white', marginBottom: 5},
+    text: {textAlign: "center", fontSize: 30, color: Colors.DARK_GREEN, backgroundColor: 'white', marginBottom: 5},
     text1: {textAlign: "center", fontSize: 30},
     blocQuestion: {flex: 1},
     blocQuestionBot: {flex: 1, backgroundColor: 'white'},
-    question: {textAlign: "center", fontSize: 40, backgroundColor: 'white', color: Colors.DARK_BLUE, flexWrap: 'wrap'}
+    question: {textAlign: "center", fontSize: 40, backgroundColor: 'white', color: Colors.DARK_GREEN, flexWrap: 'wrap'}
 });

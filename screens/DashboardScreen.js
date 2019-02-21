@@ -120,12 +120,12 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         padding: 16,
-        backgroundColor: Colors.MEDIUM_BLUE
+        backgroundColor: Colors.MEDIUM_GREEN
     },
     tabItemSelected: {
         flex: 1,
         alignItems: 'center',
         padding: 16,
-        backgroundColor: Colors.DARK_BLUE,
+        backgroundColor: Colors.DARK_GREEN,
     }
 });

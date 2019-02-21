@@ -122,12 +122,12 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     headerTitle: {
-        color: Colors.DARK_BLUE,
+        color: Colors.DARK_GREEN,
         fontSize: 25,
         backgroundColor: "#fff",
     },
     headerModalTitle: {
-        color: Colors.DARK_BLUE,
+        color: Colors.DARK_GREEN,
         fontSize: 25,
         backgroundColor: "#fff",
         alignItems: "center",
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     },
 
     buttonMenu: {
-        backgroundColor: Colors.DARK_BLUE,
+        backgroundColor: Colors.DARK_GREEN,
         width: 200,
         padding: 5,
         borderRadius: 5,

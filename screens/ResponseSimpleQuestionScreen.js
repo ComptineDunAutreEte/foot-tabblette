@@ -53,7 +53,7 @@ export class ResponseSimpleQuestionScreen extends BaseScreen {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.DARK_BLUE,
+        backgroundColor: Colors.DARK_GREEN,
         alignItems: 'center',
         justifyContent: 'center',
     },

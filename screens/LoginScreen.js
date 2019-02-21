@@ -1,6 +1,6 @@
 import React from "react";
 
-import { KeyboardAvoidingView, StyleSheet, TextInput, View } from 'react-native';
+import { ImageBackground, KeyboardAvoidingView, StyleSheet, TextInput, View } from 'react-native';
 import BaseScreen from "./BaseScreen";
 import { Ionicons } from '@expo/vector-icons';
 import { Button, ButtonGroup } from 'react-native-elements';
@@ -46,74 +46,70 @@ export default class LoginScreen extends BaseScreen {
         getSocket().on('navigate', (url) => navigate(url.data));
         return (
             <View style={styles.topView}>
-                <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoidingView}>
 
-                    <View style={styles.form}>
+                <ImageBackground
+                    resizeMode={'stretch'}
 
-                        <MainTitle title={"Bienvenue sur FootBoard !"}/>
-                        <Text style={{ marginBottom: 20, textAlign: "center"}}>Veuillez choisir une team et entrer votre pseudo.</Text>
+                    style={{flex: 1, width: "100%", height: "100%"}}
+                    source={require('../assets/bg_foot.jpg')}>
+                    <KeyboardAvoidingView behavior="padding" style={styles.keyboardAvoidingView}>
 
-                        <SubTitleComponent title={"Team"} />
-                        <ButtonGroup
-                            onPress={this.updateIndex}
-                            selectedIndex={selectedIndex}
-                            buttons={buttons}
-                            containerStyle={{width: 330, height: 50, marginBottom: 20,}}
-                        />
+                        <View style={styles.form}>
 
-                        <SubTitleComponent title={"Votre niveau en foot"} />
-                        <ButtonGroup
-                            onPress={(level) => {
-                                this.setState({userLevel: level})
-                            }}
-                            selectedIndex={userLevel}
-                            buttons={userLevelsChoices}
-                            containerStyle={{width: 330, height: 50}}
-                        />
-                        <TextInput
-                            style={styles.loginInput}
-                            onChangeText={(text) => {
-                                this.isEmptyPseudo(false);
-                                this.setState({text});
+                            <MainTitle title={"Bienvenue sur FootBoard !"}/>
+                            <Text style={{ marginBottom: 20, textAlign: "center"}}>Veuillez choisir une team et entrer votre pseudo.</Text>
 
-                                if (text === "") {
-                                    this.isEmptyPseudo(true);
-                                }
-                            }}
-                            value={this.state.text}
-                            placeholder={"Pseudo"}
-                            onEndEditing={this.clearFocus}
-                        />
-                        <Button
-                            buttonStyle={styles.buttonStyle}
-                            title='Se connecter'
-                            disabled={this.state.isEmptyPseudo === true}
-                            iconRight
-                            onPress={() => {
-                                this.simpleAsyncStorageService.set('pseudo', this.state.text);
-                                this.simpleAsyncStorageService.set('team', buttons[this.state.selectedIndex]);
-                                this.simpleAsyncStorageService.set('playerLevel', userLevelsChoices[this.state.userLevel]);
-                                const infos = {
-                                    team: buttons[this.state.selectedIndex],
-                                    pseudo: this.state.text,
-                                    userLevel: userLevelsChoices[this.state.userLevel]
-                                };
-                                this.connecte(infos);
-                            }}
-                        />
-                        <Button
-                            buttonStyle={styles.buttonStyle}
-                            title='Reset'
+                            <SubTitleComponent title={"Team"} />
+                            <ButtonGroup
+                                onPress={this.updateIndex}
+                                selectedIndex={selectedIndex}
+                                buttons={buttons}
+                                containerStyle={{width: 330, height: 50, marginBottom: 20,}}
+                            />
 
-                            iconRight
-                            onPress={() => {
-                                reset();
-                                //this.getImage();
-                                //navigate('QuestionCollectif');
-                            }}
-                        />
-                    </View>
-                </KeyboardAvoidingView>
+                            <SubTitleComponent title={"Votre niveau en foot"} />
+                            <ButtonGroup
+                                onPress={(level) => {
+                                    this.setState({userLevel: level})
+                                }}
+                                selectedIndex={userLevel}
+                                buttons={userLevelsChoices}
+                                containerStyle={{width: 330, height: 50}}
+                            />
+                            <TextInput
+                                style={styles.loginInput}
+                                onChangeText={(text) => {
+                                    this.isEmptyPseudo(false);
+                                    this.setState({text});
+
+                                    if (text === "") {
+                                        this.isEmptyPseudo(true);
+                                    }
+                                }}
+                                value={this.state.text}
+                                placeholder={"Pseudo"}
+                                onEndEditing={this.clearFocus}
+                            />
+                            <Button
+                                buttonStyle={styles.buttonStyle}
+                                title='Se connecter'
+                                disabled={this.state.isEmptyPseudo === true}
+                                iconRight
+                                onPress={() => {
+                                    this.simpleAsyncStorageService.set('pseudo', this.state.text);
+                                    this.simpleAsyncStorageService.set('team', buttons[this.state.selectedIndex]);
+                                    this.simpleAsyncStorageService.set('playerLevel', userLevelsChoices[this.state.userLevel]);
+                                    const infos = {
+                                        team: buttons[this.state.selectedIndex],
+                                        pseudo: this.state.text,
+                                        userLevel: userLevelsChoices[this.state.userLevel]
+                                    };
+                                    this.connecte(infos);
+                                }}
+                            />
+                        </View>
+                    </KeyboardAvoidingView>
+                </ImageBackground>
             </View>
         );
     }
@@ -151,7 +147,7 @@ const styles = StyleSheet.create({
     },
     topView: {
         flex: 1,
-        backgroundColor: Colors.DARK_BLUE,
+        backgroundColor: Colors.DARK_GREEN,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -176,8 +172,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     buttonStyle: {
-        padding: 5,
+        padding: 15,
         borderRadius: 100,
+        height: 30,
+        backgroundColor: Colors.DARK_GREEN
     },
     loginInput: {
         marginTop: 15,

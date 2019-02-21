@@ -2,32 +2,14 @@ import openSocket from 'socket.io-client';
 import uid from 'uuid/v4';
 import { User } from "../model/user";
 
-
-//const socket = openSocket('http://eeriel.fr:4000/');
-/*const socket = openSocket('http://localhost:4000/', {
-    reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax : 5000,
-    reconnectionAttempts: Infinity
-});*/
- // const socket = openSocket('http://10.212.106.107:4000/');
-
-// const socket = openSocket('http://eeriel.fr:4000/');
-
 const socket = openSocket('http://localhost:4000/');
-//const socket = openSocket('http://localhost:4000/');
-
-
 // const socket = openSocket('https://server-app-tablet.herokuapp.com/');
 //const socket = openSocket('http://eeriel.fr:4000/');
-//const socket = openSocket('https://server-app-tablet.herokuapp.com/');
 
 const user = new User();
 user.uuid = uid();
 
 const navigation = {};
-
-//getSocket().on('navigate',(url)=>navigation.navigate(url));
 
 function seconnecte(cb, toSend) {
     socket.on('login', message => cb(message));
