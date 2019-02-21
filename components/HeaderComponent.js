@@ -1,12 +1,13 @@
 import React from "react";
-import { Modal, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
+import { Modal, StyleSheet, Text, View } from 'react-native';
 import Colors from "../constants/Colors";
 import { Dimensions, PixelRatio } from 'react-native'
 import { Button } from 'react-native-elements';
 import DashboardScreen from "../screens/DashboardScreen";
 import GameService from "../services/GameService";
 import SimpleAsyncStorageService from "../services/SimpleAsyncStorageService";
-import { dashboardDataRequest, send } from "../services/WebsocketService";
+import { faCircle } from "@fortawesome/free-solid-svg-icons/faCircle";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 class HeaderComponent extends React.Component {
 
@@ -21,6 +22,7 @@ class HeaderComponent extends React.Component {
             modalVisible: false,
             isInGame: false,
             playerLevel: null,
+            playerTeam: null,
         }
     }
 
@@ -34,6 +36,12 @@ class HeaderComponent extends React.Component {
         this.simpleAsyncStorageService.get('playerLevel').then((level) => {
             this.setState({
                 playerLevel: level
+            })
+        });
+
+        this.simpleAsyncStorageService.get('team').then((team) => {
+            this.setState({
+                playerTeam: team
             })
         });
 
@@ -53,7 +61,7 @@ class HeaderComponent extends React.Component {
     }
 
     render() {
-        const {pseudo, playerLevel} = this.state;
+        const {pseudo, playerLevel, playerTeam} = this.state;
 
         return (
             <View style={styles.header}>
@@ -61,7 +69,6 @@ class HeaderComponent extends React.Component {
                     <Text style={styles.headerTitle}>FOOTBOARD</Text>
                 </View>
                 <View style={styles.menu}>
-
                     <Button
                         buttonStyle={styles.buttonMenu}
                         title={"Statistiques"}
@@ -69,12 +76,17 @@ class HeaderComponent extends React.Component {
                         onPress={() => {
                             this.setModalVisible(true);
                         }}
-                        disabled={this.state.isInGame}
                     />
                 </View>
                 <View style={styles.profil}>
-                    <Text>Pseudo : {pseudo}</Text>
-                    <Text>Niveau : {playerLevel} en foot</Text>
+                    <Text style={{fontSize: 16}}>Pseudo : {pseudo}</Text>
+                    <View style={{flexDirection: 'row'}}>
+                        <FontAwesomeIcon icon={faCircle} style={playerTeam === 'Rouge' ? {marginRight: 10, color: 'red'} : {marginRight: 10, color: 'blue'}} size={15}/>
+                        <Text style={playerTeam === 'Rouge' ? {fontSize: 16, color: 'red'} : {fontSize: 16, color: 'blue'}}>
+                            Équipe : {playerTeam}
+                        </Text>
+                    </View>
+
                 </View>
 
                 <Modal animationType="slide" transparent={false} visible={this.state.modalVisible}>
@@ -96,7 +108,7 @@ class HeaderComponent extends React.Component {
                         </View>
                     </View>
                     <View style={{marginTop: 22, flex: 1,}}>
-                        <DashboardScreen />
+                        <DashboardScreen/>
                     </View>
                 </Modal>
             </View>
@@ -141,10 +153,10 @@ const styles = StyleSheet.create({
     },
     profil: {
         backgroundColor: "#fff",
-        alignItems: "center",
-        flexGrow: 1
+        flexGrow: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
     },
-
     buttonMenu: {
         backgroundColor: Colors.DARK_GREEN,
         width: 200,
@@ -153,7 +165,9 @@ const styles = StyleSheet.create({
     },
     buttonTextMenu: {
         fontWeight: "bold",
-        color: Colors.WHITE
+        color: Colors.WHITE,
+        padding: 15,
+        fontSize: 16
     }
 });
 

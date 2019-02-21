@@ -4,7 +4,7 @@ import { ImageBackground, KeyboardAvoidingView, StyleSheet, TextInput, View } fr
 import BaseScreen from "./BaseScreen";
 import { Ionicons } from '@expo/vector-icons';
 import { Button, ButtonGroup } from 'react-native-elements';
-import { getSocket, getUser, seconnecte, send, reset } from "../services/WebsocketService";
+import { getSocket, getUser, seconnecte, send } from "../services/WebsocketService";
 import Colors from "../constants/Colors";
 import MainTitle from "../components/title/MainTitleComponent";
 import Text from "react-native-elements/src/text/Text";
@@ -24,9 +24,6 @@ export default class LoginScreen extends BaseScreen {
         this.updateIndex = this.updateIndex.bind(this);
         this.isEmptyPseudo = this.isEmptyPseudo.bind(this);
         this.width = this.state.width;
-
-        //getSocket().on('login', message => this.handler(message));
-
     }
 
     handler(message) {
@@ -100,6 +97,7 @@ export default class LoginScreen extends BaseScreen {
                                     this.simpleAsyncStorageService.set('pseudo', this.state.text);
                                     this.simpleAsyncStorageService.set('team', buttons[this.state.selectedIndex]);
                                     this.simpleAsyncStorageService.set('playerLevel', userLevelsChoices[this.state.userLevel]);
+                                    this.simpleAsyncStorageService.set('team', buttons[this.state.selectedIndex]);
                                     const infos = {
                                         team: buttons[this.state.selectedIndex],
                                         pseudo: this.state.text,
