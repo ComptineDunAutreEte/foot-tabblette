@@ -1,12 +1,16 @@
 import React from "react";
 import BaseScreen from "./BaseScreen";
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
 import HeaderComponent from "../components/HeaderComponent";
 import SubTitleComponent from "../components/title/SubTitleComponent";
 import MainTitle from "../components/title/MainTitleComponent";
 import { Button } from "react-native-elements";
 import Colors from "../constants/Colors";
-import { getSimpleQuestion, getSimpleQuestionResponse, send } from "../services/WebsocketService";
+import { getSimpleQuestionResponse, send } from "../services/WebsocketService";
+import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
+import { faQuestion } from "@fortawesome/free-solid-svg-icons/faQuestion";
+import { faTimes } from "@fortawesome/free-solid-svg-icons/index";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 export default class QuestionScreen extends BaseScreen {
 
@@ -25,7 +29,6 @@ export default class QuestionScreen extends BaseScreen {
         this.questionCounter = navigation.getParam('questionCounter');
         this.maxTimer = navigation.getParam('maxTimer');
         this.history = navigation.getParam('history');
-        console.log(this.history);
 
         this.state = {
             selectedResponse: null,
@@ -40,6 +43,7 @@ export default class QuestionScreen extends BaseScreen {
         const intervalRatio = (1000 / intervalTimer);
         const virtualMaxTimer = this.maxTimer * intervalRatio;
         let virtualTimer = virtualMaxTimer;
+        console.log("componentDidMount")
 
         this.interval = setInterval(() => {
             virtualTimer--;
@@ -58,88 +62,139 @@ export default class QuestionScreen extends BaseScreen {
     render() {
         const {state} = this.props.navigation;
 
-        const userDatas = {
-            questionId: this.question.id,
-            userResponse: this.state.selectedResponse,
-            userResponseTime: this.maxTimer - this.state.timer
-        };
+        if (!this.question) {
+            setTimeout(() => {
+                this.props.navigation.navigate("Home");
+            }, 5000);
 
-        if (this.state.timer === 0 && this.state.isQuestionSent === false) {
-            clearInterval(this.interval);
-            this.sendResponse(userDatas)
+            return (
+                <View style={styles.container}>
+                    <ImageBackground
+                        resizeMode={'cover'}
+                        style={{flex: 1, width: "100%", height: "100%"}}
+                        source={require('../assets/bg_foot.jpg')}>
+
+                        <View style={styles.contentView}>
+                            <View style={styles.form}>
+                                <Text style={styles.text}>Aucune question n'a été envoyé. Vous allez être redirigé vers la page d'accueiil.</Text>
+                            </View>
+                        </View>
+                    </ImageBackground>
+                </View>
+            )
+        } else {
+            const userDatas = {
+                questionId: this.question.id,
+                userResponse: this.state.selectedResponse,
+                userResponseTime: this.maxTimer - this.state.timer
+            };
+
+            if (this.state.timer === 0) {
+                console.log("itimer terminé");
+                clearInterval(this.interval);
+
+                if (this.state.isQuestionSent === false) {
+                    console.log("envoi de la réponse");
+                    this.sendResponse(userDatas);
+                    this.setState({isQuestionSent: true});
+                }
+            }
+
+            return (
+                <View style={styles.container}>
+                    <ImageBackground
+                        resizeMode={'cover'}
+                        style={{width: "100%", height: "100%", flexDirection: 'row', padding: 20}}
+                        source={require('../assets/bg_foot.jpg')}>
+                        <View style={styles.stats}>
+                            <SubTitleComponent title={"Statistiques de la partie"}/>
+                            <ScrollView>
+                                {
+                                    (this.history.length > 0) ? (
+                                        this.history.map((h) => {
+                                            return (
+                                                <View style={{flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: "#ddd", paddingBottom: 15, marginBottom: 15}}>
+                                                    {this.displayIcon(h)}<Text style={{fontSize: 18}}>Question {h.questionNumber}</Text>
+                                                </View>
+                                            );
+                                        })
+                                    ): <Text>Il n'y a pas encore d'historique de questions.</Text>
+                                }
+                            </ScrollView>
+                        </View>
+                        <View style={styles.main}>
+                            <View style={{alignItems: 'center'}}>
+                                <MainTitle title={"Question " + this.questionCounter}/>
+                                <SubTitleComponent title={this.question.question}/>
+                            </View>
+
+                            <View style={styles.blocResponse}>
+                                {
+                                    this.question.responses.map((response) => {
+                                        return (
+                                            <Button key={response.id}
+                                                    buttonStyle={this.state.selectedResponse === response.id ? styles.buttonPressed : styles.buttonResponse}
+                                                    onPress={() => {
+                                                        this.setState({selectedResponse: response.id})
+                                                    }}
+                                                    title={response.response}
+                                                    titleStyle={this.state.selectedResponse === response.id ? styles.buttonTextPressed : styles.buttonTextResponse}/>
+                                        );
+                                    })
+                                }
+                            </View>
+
+
+                            <View style={styles.blocValidate}>
+                                <Button buttonStyle={styles.buttonValidate}
+                                        disabled={this.state.selectedResponse === null || this.state.isQuestionSent === true}
+                                        title={"Valider votre réponse"}
+                                        onPress={() => {
+                                            clearInterval(this.interval);
+                                            this.setState({isQuestionSent: true});
+                                            this.sendResponse(userDatas);
+                                        }}/>
+                            </View>
+
+                            <View style={styles.timerBg}>
+                                <View style={{position: "absolute", zIndex: 11, padding: 10}}>
+                                    <Text style={{color: "#fff", fontSize: 20}}>Temps restant : {this.state.timer}</Text>
+                                </View>
+                                <View style={{
+                                    height: 38,
+                                    position: "absolute",
+                                    zIndex: 10,
+                                    backgroundColor: Colors.DARK_GREEN,
+                                    width: `${this.state.percentage}%`,
+                                    borderRadius: 10,
+                                }}>
+                                    <Text style={{color: Colors.DARK_GREEN}}>.</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </ImageBackground>
+                </View>
+            );
         }
+    }
 
-        return (
-            <View style={styles.container}>
-                <ImageBackground
-                    resizeMode={'cover'}
-                    style={{width: "100%", height: "100%", flexDirection: 'row', padding: 20}}
-                    source={require('../assets/bg_foot.jpg')}>
-                    <View style={styles.stats}>
-                        <SubTitleComponent title={"Statistiques de la partie"}/>
-                        <Text>Stats</Text>
-                    </View>
-                    <View style={styles.main}>
-                        <View style={{alignItems: 'center'}}>
-                            <MainTitle title={"Question " + this.questionCounter}/>
-                            <SubTitleComponent title={this.question.question}/>
-                        </View>
-
-                        <View style={styles.blocResponse}>
-                            {
-                                this.question.responses.map((response) => {
-                                    return (
-                                        <Button key={response.id}
-                                                buttonStyle={this.state.selectedResponse === response.id ? styles.buttonPressed : styles.buttonResponse}
-                                                onPress={() => {
-                                                    this.setState({selectedResponse: response.id})
-                                                }}
-                                                title={response.response}
-                                                titleStyle={this.state.selectedResponse === response.id ? styles.buttonTextPressed : styles.buttonTextResponse}/>
-                                    );
-                                })
-                            }
-                        </View>
-
-
-                        <View style={styles.blocValidate}>
-                            <Button buttonStyle={styles.buttonValidate}
-                                    disabled={this.state.selectedResponse === null || this.state.isQuestionSent === true}
-                                    title={"Valider votre réponse"}
-                                    onPress={() => {
-                                        clearInterval(this.interval);
-                                        this.setState({isQuestionSent: true});
-                                        console.log(userDatas);
-                                        this.sendResponse(userDatas);
-                                    }}/>
-                        </View>
-
-                        <View style={styles.timerBg}>
-                            <View style={{position: "absolute", zIndex: 11, padding: 10}}>
-                                <Text style={{color: "#fff", fontSize: 20}}>Temps restant : {this.state.timer}</Text>
-                            </View>
-                            <View style={{
-                                height: 38,
-                                position: "absolute",
-                                zIndex: 10,
-                                backgroundColor: Colors.DARK_GREEN,
-                                width: `${this.state.percentage}%`,
-                                borderRadius: 10,
-                            }}>
-                                <Text style={{color: Colors.DARK_GREEN}}>.</Text>
-                            </View>
-                        </View>
-                    </View>
-                </ImageBackground>
-            </View>
-        );
+    displayIcon(question) {
+        if (question.userResponseId === null) {
+            return (<FontAwesomeIcon icon={faQuestion} style={{color: "#e64a19", marginRight: 10}} size={20}/>);
+        } else {
+            if (question.isGoodResponse) {
+                return (<FontAwesomeIcon icon={faCheck} style={{color: "#43a047", marginRight: 10}} size={20}/>);
+            } else {
+                return (<FontAwesomeIcon icon={faTimes} style={{color: "#e64a19", marginRight: 10}} size={20}/>);
+            }
+        }
     }
 
     sendResponse(data) {
-        console.log("ask simple question");
         send("ask-simple-question", data);
 
         getSimpleQuestionResponse((response) => {
+            console.log("yop");
             this.props.navigation.navigate("ResponseSimpleQuestion", {
                 isCorrectPlayerResponse: response.isCorrectPlayerResponse
             });

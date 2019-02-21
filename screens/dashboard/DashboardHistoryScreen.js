@@ -84,7 +84,6 @@ export default class DashboardHistoryScreen extends React.Component {
         );
     }
 
-
     setSections = sections => {
         this.setState({
             activeSections: sections.includes(undefined) ? [] : sections,
