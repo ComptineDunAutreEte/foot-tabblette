@@ -94,12 +94,13 @@ export default class LoginScreen extends BaseScreen {
                                 disabled={this.state.isEmptyPseudo === true}
                                 iconRight
                                 onPress={() => {
+                                    const team = buttons[this.state.selectedIndex] === "Rouge" ? "A": "B";
                                     this.simpleAsyncStorageService.set('pseudo', this.state.text);
                                     this.simpleAsyncStorageService.set('team', buttons[this.state.selectedIndex]);
                                     this.simpleAsyncStorageService.set('playerLevel', userLevelsChoices[this.state.userLevel]);
                                     this.simpleAsyncStorageService.set('team', buttons[this.state.selectedIndex]);
                                     const infos = {
-                                        team: buttons[this.state.selectedIndex],
+                                        team: team,
                                         pseudo: this.state.text,
                                         userLevel: userLevelsChoices[this.state.userLevel]
                                     };
