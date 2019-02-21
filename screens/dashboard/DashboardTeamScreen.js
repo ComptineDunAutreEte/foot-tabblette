@@ -16,7 +16,7 @@ export default class DashboardTeamScreen extends React.Component {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
         };
-        
+
         this.aResponses = this.props.teamDatas.aResponses;
         this.bResponses = this.props.teamDatas.bResponses;
 
@@ -64,7 +64,7 @@ export default class DashboardTeamScreen extends React.Component {
             })
         });
 
-        this.chartWidth = this.bTimes.length > 20 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width;
+        this.chartWidth = this.bTimes.length > 20 ? Dimensions.get('window').width + 200 : Dimensions.get('window').width - 30;
     }
 
     render() {
@@ -116,35 +116,41 @@ export default class DashboardTeamScreen extends React.Component {
                     <View style={styles.responseTime}>
                         <SubTitleComponent title={"Évolution du score au cours de la partie"}/>
 
-                        <VictoryChart height={350} theme={VictoryTheme.material} domain={{y: [0, this.aTeamTotalScore > this.bTeamTotalScore ? this.aTeamTotalScore + 1 : this.bTeamTotalScore + 1]}}>
-                            <VictoryAxis tickValues={this.tickValues} label="Numéro de question" offsetY={49}
-                                         style={{axisLabel: {padding: 30}}}/>
-                            <VictoryAxis label="Score" dependentAxis offsetX={50}
-                                         style={{axisLabel: {padding: 30}}}/>
-                            <VictoryLine data={this.aTeamTotalScoreGraph} style={{data: {stroke: "magenta"}}}/>
-                            <VictoryLine data={this.bTeamTotalScoreGraph} style={{data: {stroke: "cyan"}}}/>
+                        <ScrollView horizontal={true}>
+                            <VictoryChart height={350} width={this.chartWidth} theme={VictoryTheme.material}
+                                          domain={{y: [0, this.aTeamTotalScore > this.bTeamTotalScore ? this.aTeamTotalScore + 1 : this.bTeamTotalScore + 1]}}>
+                                <VictoryAxis tickValues={this.tickValues} label="Numéro de question" offsetY={49}
+                                             style={{axisLabel: {padding: 30}}}/>
+                                <VictoryAxis label="Score" dependentAxis offsetX={50}
+                                             style={{axisLabel: {padding: 30}}}/>
+                                <VictoryLine data={this.aTeamTotalScoreGraph} style={{data: {stroke: "magenta"}}}/>
+                                <VictoryLine data={this.bTeamTotalScoreGraph} style={{data: {stroke: "cyan"}}}/>
 
-                            <VictoryLegend
-                                x={this.state.width / 2 - 150} y={0}
-                                centerTitle
-                                orientation="horizontal"
-                                gutter={20}
-                                style={{border: {stroke: "#eee"}, title: {fontSize: 20}}}
-                                data={[
-                                    {name: "Votre team", symbol: {fill: "magenta"}},
-                                    {name: "Team adverse", symbol: {fill: "cyan"}}
-                                ]}
-                            />
-                        </VictoryChart>
+                                <VictoryLegend
+                                    x={this.state.width / 2 - 150} y={0}
+                                    centerTitle
+                                    orientation="horizontal"
+                                    gutter={20}
+                                    style={{border: {stroke: "#eee"}, title: {fontSize: 20}}}
+                                    data={[
+                                        {name: "Votre team", symbol: {fill: "magenta"}},
+                                        {name: "Team adverse", symbol: {fill: "cyan"}}
+                                    ]}
+                                />
+                            </VictoryChart>
+                        </ScrollView>
                     </View>
 
                     <View style={styles.responseTime}>
                         <SubTitleComponent title={"Temps de réponse par questions"}/>
 
                         <ScrollView horizontal={true}>
-                            <VictoryChart theme={VictoryTheme.material} domain={{x: [0, this.aTimes.length + 1]}} width={this.chartWidth} height={350}>
-                                <VictoryAxis tickValues={this.tickValues} label="Numéro de question" offsetY={49} style={{axisLabel: {padding: 30}}}/>
-                                <VictoryAxis label="Temps de réponses en secondes" dependentAxis offsetX={50} style={{axisLabel: {padding: 30}}}/>
+                            <VictoryChart theme={VictoryTheme.material} domain={{x: [0, this.aTimes.length + 1]}}
+                                          width={this.chartWidth} height={350}>
+                                <VictoryAxis tickValues={this.tickValues} label="Numéro de question" offsetY={49}
+                                             style={{axisLabel: {padding: 30}}}/>
+                                <VictoryAxis label="Temps de réponses en secondes" dependentAxis offsetX={50}
+                                             style={{axisLabel: {padding: 30}}}/>
 
                                 <VictoryGroup offset={12} style={{data: {width: 10}}} colorScale={["magenta", "cyan"]}>
                                     <VictoryBar data={this.aTimes} labels={(d) => `${d._y}`}/>

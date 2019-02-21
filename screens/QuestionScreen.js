@@ -11,6 +11,8 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
 import { faQuestion } from "@fortawesome/free-solid-svg-icons/faQuestion";
 import { faTimes } from "@fortawesome/free-solid-svg-icons/index";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import CategoryDetailComponent from "../components/dashboard/CategoryDetailComponent";
+import { categories } from "../model/categories";
 
 export default class QuestionScreen extends BaseScreen {
 
@@ -36,6 +38,8 @@ export default class QuestionScreen extends BaseScreen {
             isQuestionSent: false,
             percentage: 100
         };
+
+        this.questionCategory = categories.find((c) => c.key === this.question.category);
     }
 
     componentDidMount() {
@@ -125,7 +129,9 @@ export default class QuestionScreen extends BaseScreen {
                         <View style={styles.main}>
                             <View style={{alignItems: 'center'}}>
                                 <MainTitle title={"Question " + this.questionCounter}/>
-                                <SubTitleComponent title={this.question.question}/>
+                                <Text style={{fontSize: 25, color: this.questionCategory.color, fontWeight: "bold", marginBottom: 20, marginTop: 20}}>Catégorie : {this.questionCategory.key}</Text>
+
+                                <MainTitle title={this.question.question}/>
                             </View>
 
                             <View style={styles.blocResponse}>
