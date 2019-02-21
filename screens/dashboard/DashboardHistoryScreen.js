@@ -128,7 +128,7 @@ export default class DashboardHistoryScreen extends React.Component {
                             return (
                                 <Animatable.Text animation={isActive ? 'ease-in-out' : undefined}>
                                     <Text style={[
-                                        {fontSize: 16},
+                                        {fontSize: 18},
                                         response.isValid ?
                                             (section.userResponseId === response.id ? {
                                                 color: "green",
@@ -140,16 +140,14 @@ export default class DashboardHistoryScreen extends React.Component {
                                             } : {color: "black", fontWeight: "normal"})
                                     ]}>{response.response}</Text>
                                 </Animatable.Text>
-
-
                             )
                         })
                     }
                 </View>
 
                 <View style={{flex: 1, flexGrow: 1}}>
-                    <Text style={{fontSize: 16, fontWeight: "bold"}}>Anecdote : </Text>
-                    <Text style={{fontSize: 16}}>
+                    <Text style={{fontSize: 18, fontWeight: "bold"}}>Anecdote : </Text>
+                    <Text style={{fontSize: 18}}>
                         {section.anecdote}
                     </Text>
                 </View>
@@ -178,7 +176,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         paddingLeft: 10,
-        fontSize: 18,
+        fontSize: 22,
         fontWeight: 'bold',
         flex: 1
     },

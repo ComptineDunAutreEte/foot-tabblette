@@ -86,19 +86,16 @@ class HeaderComponent extends React.Component {
                             Équipe : {playerTeam}
                         </Text>
                     </View>
-
                 </View>
 
                 <Modal animationType="slide" transparent={false} visible={this.state.modalVisible}>
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={{flex: 1}}>
-                            <Text style={styles.headerModalTitle}>
-                                Statistiques
-                            </Text>
+                    <View style={styles.modalHeader}>
+                        <View style={{flexGrow: 1}}>
+                            <Text style={styles.headerTitle}>STATISTIQUES</Text>
                         </View>
-                        <View style={{alignItems: "center", marginRight: 20, marginTop: 10}}>
+                        <View style={styles.menu}>
                             <Button
-                                title={"Fermer les statistiques"}
+                                title={"Fermer"}
                                 onPress={() => {
                                     this.setModalVisible(false);
                                 }}
@@ -106,8 +103,17 @@ class HeaderComponent extends React.Component {
                                 titleStyle={styles.buttonTextMenu}
                             />
                         </View>
+                        <View style={styles.profil}>
+                            <Text style={{fontSize: 16}}>Pseudo : {pseudo}</Text>
+                            <View style={{flexDirection: 'row'}}>
+                                <FontAwesomeIcon icon={faCircle} style={playerTeam === 'Rouge' ? {marginRight: 10, color: 'red'} : {marginRight: 10, color: 'blue'}} size={15}/>
+                                <Text style={playerTeam === 'Rouge' ? {fontSize: 16, color: 'red'} : {fontSize: 16, color: 'blue'}}>
+                                    Équipe : {playerTeam}
+                                </Text>
+                            </View>
+                        </View>
                     </View>
-                    <View style={{marginTop: 22, flex: 1,}}>
+                    <View style={{flex: 1}}>
                         <DashboardScreen/>
                     </View>
                 </Modal>
@@ -130,6 +136,13 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 3,
         elevation: 3,
+        flexDirection: 'row',
+        width: "100%",
+    },
+    modalHeader: {
+        backgroundColor: Colors.WHITE,
+        padding: 20,
+        fontSize: 20,
         flexDirection: 'row',
         width: "100%",
     },

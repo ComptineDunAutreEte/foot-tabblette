@@ -52,14 +52,14 @@ export default class LoginScreen extends BaseScreen {
                         <View style={styles.form}>
 
                             <MainTitle title={"Bienvenue sur FootBoard !"}/>
-                            <Text style={{ marginBottom: 20, textAlign: "center"}}>Veuillez choisir une team et entrer votre pseudo.</Text>
+                            <Text style={{ marginBottom: 20, textAlign: "center", fontSize: 18}}>Veuillez choisir une team et entrer votre pseudo.</Text>
 
                             <SubTitleComponent title={"Équipe"} />
                             <ButtonGroup
                                 onPress={this.updateIndex}
                                 selectedIndex={selectedIndex}
                                 buttons={buttons}
-                                containerStyle={{width: 330, height: 50, marginBottom: 20,}}
+                                containerStyle={{width: 360, height: 50, marginBottom: 20,}}
                                 selectedButtonStyle={{backgroundColor: Colors.DARK_GREEN}}
                             />
 
@@ -70,7 +70,7 @@ export default class LoginScreen extends BaseScreen {
                                 }}
                                 selectedIndex={userLevel}
                                 buttons={userLevelsChoices}
-                                containerStyle={{width: 330, height: 50}}
+                                containerStyle={{width: 360, height: 50}}
                                 selectedButtonStyle={{backgroundColor: Colors.DARK_GREEN}}
                             />
                             <TextInput
