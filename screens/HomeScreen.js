@@ -21,7 +21,6 @@ export class HomeScreen extends BaseScreen {
     constructor(props) {
         super(props);
         this.width = this.state.width;
-        console.log(this.width);
     }
 
     render() {
@@ -42,62 +41,16 @@ export class HomeScreen extends BaseScreen {
                     resizeMode={'cover'}
                     style={{justifyContent: 'center',alignItems: 'center',flex: 1, width: "100%", height: "100%"}}
                     source={require('../assets/bg_foot.jpg')}>
+                    <View style={styles.contentView}>
+                        <View style={styles.form}>
+                            <Text style={styles.text}>En attente d'instructions de la table</Text>
+                        </View>
+                    </View>
                 </ImageBackground>
             </View>
         );
     }
 }
-
-
-/*<View style={styles.contentView}>
-    <View style={styles.form}>
-        <Text style={styles.text}>Vos points</Text>
-        <Text style={styles.text}>{getUser().score}</Text>
-    </View>
-</View>*/
-
-/* <Button
-     buttonStyle={styles.buttonStyle}
-     title='Reset Server'
-     iconRight
-     onPress={() => {
-         reset();
-     }}
- />
- <Button
-     buttonStyle={styles.buttonStyle}
-     title='Question collectif v2'
-     iconRight
-     onPress={() => {
-         //send('question-collectif-request-v2', 'request');
-         navigate('QuestionCollectifV2');
-     }}
- />
-
- <Button
-     buttonStyle={styles.buttonStyle}
-     title='Question collectif (parralèle)'
-     iconRight
-     onPress={() => {
-         //send('question-collectif-request-v2', 'request');
-         navigate('QuestionCollectifParrallel');
-     }}
- />
-
-
- <Button
-     buttonStyle={styles.buttonStyle}
-     title='QuestionCollectif'
-     iconRight
-     onPress={() => {
-         send('question-collectif-request', 'request');
-         //navigate('QuestionCollectif');
-     }}
- />
-
- <Button buttonStyle={styles.buttonStyle} title={"Question simple"} onPress={() => {
-     navigate("Wait");
- }}/>*/
 
 const styles = StyleSheet.create({
     container: {

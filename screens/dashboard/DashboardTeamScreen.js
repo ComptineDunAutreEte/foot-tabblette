@@ -1,6 +1,5 @@
 import React from "react";
 import { Text, View, StyleSheet, ScrollView, PixelRatio, Dimensions } from 'react-native';
-import MainTitle from "../../components/title/MainTitleComponent";
 import {
     VictoryAxis, VictoryBar, VictoryChart, VictoryGroup, VictoryLegend, VictoryLine,
     VictoryTheme
