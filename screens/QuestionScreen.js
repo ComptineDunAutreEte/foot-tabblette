@@ -202,7 +202,8 @@ export default class QuestionScreen extends BaseScreen {
         getSimpleQuestionResponse((response) => {
             console.log("yop");
             this.props.navigation.navigate("ResponseSimpleQuestion", {
-                isCorrectPlayerResponse: response.isCorrectPlayerResponse
+                isCorrectPlayerResponse: response.isCorrectPlayerResponse,
+                anecdote: this.question.anecdote
             });
         })
     }

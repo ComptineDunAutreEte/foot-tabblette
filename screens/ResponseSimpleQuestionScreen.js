@@ -25,6 +25,7 @@ export class ResponseSimpleQuestionScreen extends BaseScreen {
 
         const { navigation } = this.props;
         this.isCorrectPlayerResponse = navigation.getParam('isCorrectPlayerResponse');
+        this.anecdote = navigation.getParam('anecdote');
     }
 
     render() {
@@ -44,6 +45,10 @@ export class ResponseSimpleQuestionScreen extends BaseScreen {
             <View style={styles.container}>
                 <View style={styles.main}>
                     {content}
+
+                    <Text style={{fontSize: 20, marginTop: 20}}>
+                        Anecdote : {this.anecdote}
+                    </Text>
                 </View>
             </View>
         );
