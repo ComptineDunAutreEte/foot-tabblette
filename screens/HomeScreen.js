@@ -1,7 +1,7 @@
 import React from "react";
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import BaseScreen from "./BaseScreen";
-import { getSocket, reset, waitingScreen } from "../services/WebsocketService";
+import { getSocket, reset, waitingScreen , getUser} from "../services/WebsocketService";
 import { Ionicons } from '@expo/vector-icons';
 import { Button } from 'react-native-elements';
 import { send } from "../services/WebsocketService";
@@ -40,63 +40,65 @@ export class HomeScreen extends BaseScreen {
             <View style={styles.container}>
                 <ImageBackground
                     resizeMode={'cover'}
-                    style={{flex: 1, width: "100%", height: "100%"}}
+                    style={{justifyContent: 'center',alignItems: 'center',flex: 1, width: "100%", height: "100%"}}
                     source={require('../assets/bg_foot.jpg')}>
 
-                    <View style={styles.contentView}>
+                    /*<View style={styles.contentView}>
                         <View style={styles.form}>
-                            <Text style={styles.text}>En attente d'instructions de la table</Text>
-
-
-                            <Button
-                                buttonStyle={styles.buttonStyle}
-                                title='Reset Server'
-                                iconRight
-                                onPress={() => {
-                                    reset();
-                                }}
-                            />
-                            <Button
-                                buttonStyle={styles.buttonStyle}
-                                title='Question collectif v2'
-                                iconRight
-                                onPress={() => {
-                                    //send('question-collectif-request-v2', 'request');
-                                    navigate('QuestionCollectifV2');
-                                }}
-                            />
-
-                            <Button
-                                buttonStyle={styles.buttonStyle}
-                                title='Question collectif (parralèle)'
-                                iconRight
-                                onPress={() => {
-                                    //send('question-collectif-request-v2', 'request');
-                                    navigate('QuestionCollectifParrallel');
-                                }}
-                            />
-
-
-                            <Button
-                                buttonStyle={styles.buttonStyle}
-                                title='QuestionCollectif'
-                                iconRight
-                                onPress={() => {
-                                    send('question-collectif-request', 'request');
-                                    //navigate('QuestionCollectif');
-                                }}
-                            />
-
-                            <Button buttonStyle={styles.buttonStyle} title={"Question simple"} onPress={() => {
-                                navigate("Wait");
-                            }}/>
+                            <Text style={styles.text}>Vos points</Text>
+                            <Text style={styles.text}>{getUser().score}</Text>
                         </View>
-                    </View>
+                    </View>*/
                 </ImageBackground>
             </View>
         );
     }
 }
+
+
+
+/* <Button
+     buttonStyle={styles.buttonStyle}
+     title='Reset Server'
+     iconRight
+     onPress={() => {
+         reset();
+     }}
+ />
+ <Button
+     buttonStyle={styles.buttonStyle}
+     title='Question collectif v2'
+     iconRight
+     onPress={() => {
+         //send('question-collectif-request-v2', 'request');
+         navigate('QuestionCollectifV2');
+     }}
+ />
+
+ <Button
+     buttonStyle={styles.buttonStyle}
+     title='Question collectif (parralèle)'
+     iconRight
+     onPress={() => {
+         //send('question-collectif-request-v2', 'request');
+         navigate('QuestionCollectifParrallel');
+     }}
+ />
+
+
+ <Button
+     buttonStyle={styles.buttonStyle}
+     title='QuestionCollectif'
+     iconRight
+     onPress={() => {
+         send('question-collectif-request', 'request');
+         //navigate('QuestionCollectif');
+     }}
+ />
+
+ <Button buttonStyle={styles.buttonStyle} title={"Question simple"} onPress={() => {
+     navigate("Wait");
+ }}/>*/
 
 const styles = StyleSheet.create({
     container: {
@@ -107,7 +109,6 @@ const styles = StyleSheet.create({
     },
     contentView: {
         flex: 1,
-        width: this.width / 6,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -119,8 +120,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     text: {
-        fontSize: 30,
-        color: Colors.DARK_GREEN
+        fontSize: 50,
+        color: Colors.DARK_GREEN,
+        textAlign:'center'
     },
     buttonStyle: {
         height: 30,
