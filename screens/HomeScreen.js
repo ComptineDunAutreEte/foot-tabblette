@@ -42,13 +42,6 @@ export class HomeScreen extends BaseScreen {
                     resizeMode={'cover'}
                     style={{justifyContent: 'center',alignItems: 'center',flex: 1, width: "100%", height: "100%"}}
                     source={require('../assets/bg_foot.jpg')}>
-
-                    /*<View style={styles.contentView}>
-                        <View style={styles.form}>
-                            <Text style={styles.text}>Vos points</Text>
-                            <Text style={styles.text}>{getUser().score}</Text>
-                        </View>
-                    </View>*/
                 </ImageBackground>
             </View>
         );
@@ -56,6 +49,12 @@ export class HomeScreen extends BaseScreen {
 }
 
 
+/*<View style={styles.contentView}>
+    <View style={styles.form}>
+        <Text style={styles.text}>Vos points</Text>
+        <Text style={styles.text}>{getUser().score}</Text>
+    </View>
+</View>*/
 
 /* <Button
      buttonStyle={styles.buttonStyle}
