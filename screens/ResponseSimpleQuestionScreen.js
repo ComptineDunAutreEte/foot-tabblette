@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     form: {
-        width: (Dimensions.get('window').width * PixelRatio.get()) / 3,
+        width: (Dimensions.get('window').width * PixelRatio.get()) / 2,
         backgroundColor: Colors.WHITE,
         padding: 20,
         borderColor: '#eee',
