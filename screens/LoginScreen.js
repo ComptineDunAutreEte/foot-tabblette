@@ -4,7 +4,7 @@ import { ImageBackground, KeyboardAvoidingView, StyleSheet, TextInput, View } fr
 import BaseScreen from "./BaseScreen";
 import { Ionicons } from '@expo/vector-icons';
 import { Button, ButtonGroup } from 'react-native-elements';
-import { getSocket, getUser, seconnecte, send } from "../services/WebsocketService";
+import { getSocket, getUser, seconnecte, send, reset } from "../services/WebsocketService";
 import Colors from "../constants/Colors";
 import MainTitle from "../components/title/MainTitleComponent";
 import Text from "react-native-elements/src/text/Text";
@@ -107,6 +107,17 @@ export default class LoginScreen extends BaseScreen {
                                     this.connecte(infos);
                                 }}
                             />
+
+                            <Button
+                                buttonStyle={styles.buttonStyle}
+                                titleStyle={styles.buttonTextMenu}
+                                title='Reset'
+                                disabled={this.state.isEmptyPseudo === true}
+                                iconRight
+                                onPress={() => {
+                                    reset();
+                                }}
+                            />
                         </View>
                     </KeyboardAvoidingView>
                 </ImageBackground>
@@ -118,6 +129,7 @@ export default class LoginScreen extends BaseScreen {
     connecte(infos) {
         getUser().pseudo = infos.pseudo;
         getUser().team = infos.team;
+        console.log(getUser());
         let obj = {
             team: infos.team,
             pseudo: infos.pseudo,

@@ -6,6 +6,30 @@ import {images} from "../model/images";
 import Colors from "../constants/Colors";
 import Overlay from 'react-native-modal-overlay';
 
+class Blink extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {isShowingText: true};
+
+        // Toggle the state every second
+        setInterval(() => (
+            this.setState(previousState => (
+                {isShowingText: !previousState.isShowingText}
+            ))
+        ), 1000);
+    }
+
+    render() {
+        if (!this.state.isShowingText) {
+            return null;
+        }
+
+        return (
+            <Text style={styles.text2}>{this.props.text}</Text>
+        );
+    }
+}
+
 export class QuestionCollectifV2 extends Component {
     static navigationOptions = {
         header: null,
@@ -34,7 +58,8 @@ export class QuestionCollectifV2 extends Component {
             message: '',
             modalVisible: true,
             see_table: false,
-            result: ''
+            result: '',
+            textBlinks: 'Regardez la suite de la vidéo sur la table!'
         };
 
         //send('ready-par','');
@@ -111,6 +136,11 @@ export class QuestionCollectifV2 extends Component {
             this.setState({progressVisible: true});
         });
 
+        getSocket().on('terminer', (message) => {
+            console.log('terminer');
+            this.props.navigation.navigate('Home');
+        });
+
         getSocket().on('all-answered', (message) => {
             console.log('all-answered', message);
             this.setState({progressVisible: false});
@@ -119,12 +149,16 @@ export class QuestionCollectifV2 extends Component {
         });
 
         getSocket().on('result', (message) => {
-            console.log('result==',message.data,'uuid', getUser().uuid);
-            this.setState({modalVisible: true});
-            let result = message.data.getUser().uuid;
-            if(result){
-                this.setState({result:result});
+            console.log('result==', message.data, 'uuid', getUser().uuid);
+            //this.setState({modalVisible: true});
+            let result = message.data[getUser().uuid];
+            getUser().score = getUser().score + result;
+            if (result) {
+                this.setState({textBlinks: '+' + result + ' points'});
+            } else {
+                this.setState({textBlinks: result + ' points'});
             }
+            //this.setState({textBlinks:''result});
             //afficher ecran regarde la table.
         });
         //StatusBar.setHidden(true);
@@ -305,12 +339,12 @@ export class QuestionCollectifV2 extends Component {
         }
     }
 
-    getContent(){
-        if(this.state.see_table){
+    getContent() {
+        if (this.state.see_table) {
             return this.state.result;
-        }else{
+        } else {
             return "Regardez la vidéo sur la table.";
-        }             
+        }
 
     }
 
@@ -346,13 +380,10 @@ export class QuestionCollectifV2 extends Component {
                         }
                     </View>
                     {
-                        this.state.see_table?
-                        <View style={styles.blocQuestionBot}>
-                            <Text style={{fontSize:40}}>Regardez la suite de la vidéo sur la table</Text>
+                        this.state.see_table ? <View style={styles.blocQuestionBot}>
+                            <Blink text={this.state.textBlinks}></Blink>
                         </View> : <View/>
                     }
-
-
                 </View>
                 <ImageBackground imageStyle={{resizeMode: 'stretch'}} source={images.terrain3.uri} style={styles.left}>
                     {this.getCircles()}
@@ -366,10 +397,11 @@ const styles = StyleSheet.create({
     wait: {textAlign: "center", fontSize: 60},
     right: {flex: 1, backgroundColor: Colors.DARK_GREEN},
     left: {flex: 2, backgroundColor: 'skyblue'},
-    blocText: {flex: 3},
+    blocText: {flex: 4},
+    text2: {textAlign: "center", fontSize: 40, color: Colors.DARK_GREEN, backgroundColor: 'white'},
     text: {textAlign: "center", fontSize: 30, color: Colors.DARK_GREEN, backgroundColor: 'white', marginBottom: 5},
     text1: {textAlign: "center", fontSize: 30},
-    blocQuestion: {flex: 1},
-    blocQuestionBot: {flex: 1, backgroundColor: 'white'},
+    blocQuestion: {flex: 2},
+    blocQuestionBot: {textAlign: "center", flex: 1, backgroundColor: 'white', marginBottom: 10},
     question: {textAlign: "center", fontSize: 40, backgroundColor: 'white', color: Colors.DARK_GREEN, flexWrap: 'wrap'}
 });
