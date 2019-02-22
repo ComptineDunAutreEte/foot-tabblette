@@ -27,11 +27,11 @@ export class ResponseSimpleQuestionScreen extends BaseScreen {
         let content;
 
         if (this.isCorrectPlayerResponse === true) {
-            content = <Text style={{fontSize: 25, color: "green"}}>Vous avez bien répondu à la question ! Vous pourrez
+            content = <Text style={{fontSize: 30, color: "green"}}>Vous avez bien répondu à la question ! Vous pourrez
                 déplacer votre pion sur la table.</Text>
         } else {
             content =
-                <Text style={{fontSize: 25, color: "red"}}>Vous n'avez pas bien répondu à la question ! Vous ne pourrez
+                <Text style={{fontSize: 30, color: "red"}}>Vous n'avez pas bien répondu à la question ! Vous ne pourrez
                     pas déplacer votre pion sur la table.</Text>
         }
 
@@ -51,7 +51,7 @@ export class ResponseSimpleQuestionScreen extends BaseScreen {
                         <View style={styles.form}>
                             {content}
 
-                            <Text style={{fontSize: 25, marginTop: 20}}>
+                            <Text style={{fontSize: 30, marginTop: 20}}>
                                 Anecdote : {this.anecdote}
                             </Text>
                         </View>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     form: {
-        width: (Dimensions.get('window').width * PixelRatio.get()) / 2,
+        width: (Dimensions.get('window').width * PixelRatio.get()) / 3,
         backgroundColor: Colors.WHITE,
         padding: 20,
         borderColor: '#eee',
