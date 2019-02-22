@@ -21,7 +21,6 @@ export class HomeScreen extends BaseScreen {
     constructor(props) {
         super(props);
         this.width = this.state.width;
-        console.log(this.width);
     }
 
     render() {
